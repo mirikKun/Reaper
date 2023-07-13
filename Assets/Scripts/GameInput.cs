@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GameInput : MonoBehaviour
 {
-    [SerializeField] private PlayerController _playerController;
+    [SerializeField] private CommandsExecutor _commandsExecutor;
     [SerializeField] private Camera _camera;
     private Vector3 _lastPos;
     private Ray _touchRay => _camera.ScreenPointToRay(Input.mousePosition);
@@ -13,7 +13,7 @@ public class GameInput : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            _playerController.MoveTo(GetRayPosition(_touchRay));
+            _commandsExecutor.AddMoveToCommand(GetRayPosition(_touchRay));
         }
     }
     public Vector3 GetRayPosition(Ray ray)

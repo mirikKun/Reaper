@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed;
     private Vector3 _previousPosition;
     private Vector3 _newPosition;
-    private bool _moving;
+    public bool Moving { get; private set; }
     private float _movingProgress=3;
     private float _progressFactor=0;
     private Vector3 _yPos=new Vector3(0,1f,0);
@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
         _newPosition = position+_yPos;
         _movingProgress = 0;
         _progressFactor = speed / Vector3.Distance(_previousPosition, _newPosition);
-        _moving = true;
+        Moving = true;
     }
 
     public Vector3 GetPos()
@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        if (_moving)
+        if (Moving)
         {
             _transform.position = Vector3.Lerp(_previousPosition, _newPosition,  _movingProgress);
             _movingProgress += Time.deltaTime * speed;
@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
             if (_movingProgress >= 1)
             {            
                 _movingProgress-=1;
-                _moving = false;
+                Moving = false;
             }
         }
     }
