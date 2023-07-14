@@ -37,21 +37,10 @@ public class GameInput : MonoBehaviour
             pos = new Vector3(x, 0.2f, z);
         }
 
-        pos = GetHorizontalPosition(new Ray(_commandsExecutor.LastPos, pos - _commandsExecutor.LastPos), pos);
         return pos;
     }
 
-    public Vector3 GetHorizontalPosition(Ray ray,Vector3 firstPos)
-    {
-        RaycastHit hit;
-        Vector3 pos=firstPos;
-        if (Physics.Raycast(ray, out hit,(ray.origin-pos).magnitude,OBSTACLE_LAYER_MASK))
-        {
-            pos = hit.point;
-        }
 
-        return pos;
-    }
 
    
 }

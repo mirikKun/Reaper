@@ -12,8 +12,7 @@ public class CommandsExecutor : MonoBehaviour
 
     [SerializeField] private DestinationObjectPoolSimple destinationPool;
 
-    //  [SerializeField] private Transform aura;
-    //The keys we have that are also connected to commands
+    private const int OBSTACLE_LAYER_MASK = 1 << 9;
 
     private ICommand _moveTo;
     public event Action OnExecutionStart;
@@ -23,42 +22,44 @@ public class CommandsExecutor : MonoBehaviour
     private Stack<ICommand> _undoCommands = new Stack<ICommand>();
 
     private ICommand _currentCommand;
-    public Vector3 LastPos { get; private set; }
+    public Vector3 _lastPos;
     private bool _isExecuting = false;
 
     private void Start()
     {
-        //  aura.localScale=Vector3.one*playerController.MaxDistance/5f;
-        LastPos = playerController.GetPos();
-        LastPos = new Vector3(LastPos.x, 0.2f, LastPos.z);
+        _lastPos = playerController.GetPos();
+        _lastPos = new Vector3(_lastPos.x, 0.2f, _lastPos.z);
     }
 
+   
     public void AddMoveToCommand(Vector3 pos)
     {
-        pos = CalculatePossiblePosition(pos);
-        destinationPool.GetDestination().PlaceDestination(LastPos, pos);
-        // aura.transform.position = pos;
-        LastPos = pos;
+        pos = CalculatePossiblePosition(new Ray(_lastPos, pos - _lastPos), pos);
+        destinationPool.GetDestination().PlaceDestination(_lastPos, pos);
+        _lastPos = pos;
         _todoCommands.Enqueue(new MoveToCommand(playerController, pos));
     }
-
-    public Vector3 CalculatePossiblePosition(Vector3 newPosition)
+    public Vector3 CalculatePossiblePosition(Ray ray,Vector3 newPos)
     {
-        Vector3 vector = LastPos - newPosition;
-        if (vector.magnitude > playerController.MaxDistance)
+        RaycastHit hit;
+        Vector3 pos=newPos;
+        if (Physics.Raycast(ray, out hit,playerController.MaxDistance,OBSTACLE_LAYER_MASK))
         {
+            pos = hit.point;
+        }
+        else
+        {
+            Vector3 vector = _lastPos - newPos;
             var factor = playerController.MaxDistance / vector.magnitude;
-            newPosition = new Vector3(LastPos.x - vector.x * factor, newPosition.y,
-                LastPos.z - vector.z * factor) ;
+            newPos = new Vector3(_lastPos.x - vector.x * factor, newPos.y,
+                _lastPos.z - vector.z * factor) ;
         }
 
-        return newPosition;
+        return pos;
     }
-
     public void StartExecuting()
     {
         _isExecuting = true;
-        //  aura.gameObject.SetActive(false);
         OnExecutionStart?.Invoke();
     }
 
@@ -90,7 +91,6 @@ public class CommandsExecutor : MonoBehaviour
     {
         _isExecuting = false;
         destinationPool.RevertAllToPool();
-        // aura.gameObject.SetActive(true);
         OnExecutionEnd?.Invoke();
     }
 
@@ -98,8 +98,6 @@ public class CommandsExecutor : MonoBehaviour
     private void ExecuteNewCommand(ICommand commandButton)
     {
         commandButton.Execute();
-
-        //Add the new command to the last position in the list
         _undoCommands.Push(commandButton);
     }
 }
