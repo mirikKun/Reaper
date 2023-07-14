@@ -15,6 +15,11 @@ public class GameInput : MonoBehaviour
         {
             _commandsExecutor.AddMoveToCommand(GetRayPosition(_touchRay));
         }
+
+        if (Input.GetButtonDown("Fire2"))
+        {
+            _commandsExecutor.StartExecuting();
+        }
     }
     public Vector3 GetRayPosition(Ray ray)
     {
@@ -32,11 +37,5 @@ public class GameInput : MonoBehaviour
         return pos;
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Vector3 position = _lastPos;
-        position.y += 0.01f;
-        Gizmos.DrawWireSphere(position, 0.3f);
-    }
+   
 }

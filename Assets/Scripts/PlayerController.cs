@@ -1,47 +1,116 @@
-
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed;
+    [SerializeField] private AnimationCurve speedCurve;
+    [SerializeField] private float restTime = 0.5f;
+    [SerializeField] private float maxDistance=10;
     private Vector3 _previousPosition;
     private Vector3 _newPosition;
-    public bool Moving { get; private set; }
-    private float _movingProgress=3;
-    private float _progressFactor=0;
-    private Vector3 _yPos=new Vector3(0,1f,0);
+    public PlayerState State => _state;
+    public float MaxDistance => maxDistance;
+    private float _stateProgress = 0;
+    private float _progressFactor = 0;
+    private Vector3 _yPos = new Vector3(0, 1f, 0);
     private Transform _transform;
+    private PlayerState _state=PlayerState.WaitingCommand;
 
     private void Awake()
     {
         _transform = transform;
+        
+
     }
 
     public void MoveTo(Vector3 position)
     {
         _previousPosition = _transform.position;
-        _newPosition = position+_yPos;
-        _movingProgress = 0;
+        _newPosition = position;
+        
+
+        _stateProgress = 0;
         _progressFactor = speed / Vector3.Distance(_previousPosition, _newPosition);
-        Moving = true;
+
+        _state = PlayerState.Moving;
+    }
+
+    public Vector3 CalculatePossiblePosition(Vector3 newPosition)
+    {
+        _previousPosition = _transform.position;
+        _newPosition = newPosition +_yPos;
+        Vector3 vector = _previousPosition-_newPosition;
+        if (vector.magnitude > maxDistance)
+        {
+            var factor = maxDistance / vector.magnitude;
+            _newPosition = new Vector3(_previousPosition.x- vector.x * factor, 0,
+                _previousPosition.z - vector.z * factor)+_yPos;
+        }
+        return _newPosition;
+    }
+
+    public void StartResting()
+    {
+        _stateProgress = 0;
+        _progressFactor = 1 / restTime;
+        _state = PlayerState.Rest;
+
     }
 
     public Vector3 GetPos()
     {
         return _transform.position;
     }
+
     private void Update()
     {
-        if (Moving)
+        switch (_state)
         {
-            _transform.position = Vector3.Lerp(_previousPosition, _newPosition,  _movingProgress);
-            _movingProgress += Time.deltaTime * speed;
+            case (PlayerState.Moving):
+                Move();
+                break;
+            case (PlayerState.Rest):
+                Rest();
+                break;
+        }
+        
+    }
 
-            if (_movingProgress >= 1)
-            {            
-                _movingProgress-=1;
-                Moving = false;
-            }
+    private void Move()
+    {
+        _transform.position = Vector3.Lerp(_previousPosition, _newPosition, _stateProgress);
+        _stateProgress += Time.deltaTime * _progressFactor * speedCurve.Evaluate(_stateProgress);
+
+        if (_stateProgress >= 1)
+        {
+            _stateProgress -= 1;
+            StartResting();
         }
     }
+
+    private void Rest()
+    {
+        _stateProgress += Time.deltaTime * _progressFactor;
+        if (_stateProgress >= 1)
+        {
+            _stateProgress -= 1;
+            _state = PlayerState.WaitingCommand;
+
+        }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Vector3 position = transform.position;
+        position.y += 0.01f;
+        Gizmos.DrawWireSphere(position, maxDistance);
+    }
+}
+
+
+public enum PlayerState
+{
+    Moving,
+    Rest,
+    WaitingCommand
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,6 +30,5 @@ public class MoveToCommand : ICommand
         _playerController.MoveTo(from);
     }
 
-    public bool IsFinished => !_playerController.Moving;
-
+    public bool IsFinished => _playerController.State==PlayerState.WaitingCommand;
 }
