@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     public void MoveTo(Vector3 position)
     {
         _previousPosition = _transform.position;
-        _newPosition = position;
+        _newPosition = position+_yPos;
         
 
         _stateProgress = 0;
@@ -35,19 +35,7 @@ public class PlayerController : MonoBehaviour
         _state = PlayerState.Moving;
     }
 
-    public Vector3 CalculatePossiblePosition(Vector3 newPosition)
-    {
-        _previousPosition = _transform.position;
-        _newPosition = newPosition +_yPos;
-        Vector3 vector = _previousPosition-_newPosition;
-        if (vector.magnitude > maxDistance)
-        {
-            var factor = maxDistance / vector.magnitude;
-            _newPosition = new Vector3(_previousPosition.x- vector.x * factor, 0,
-                _previousPosition.z - vector.z * factor)+_yPos;
-        }
-        return _newPosition;
-    }
+    
 
     public void StartResting()
     {

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -16,7 +17,9 @@ public class LevelGenerator : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             var pillar = obstaclesFactory.GetPillar();
-            
+            pillar.transform.position =
+                new Vector3(Random.Range(-areaSize, areaSize), 0, Random.Range(-areaSize, areaSize));
+            _pillars[i] = pillar;
         }
     }
 }
