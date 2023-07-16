@@ -10,20 +10,27 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private NavMeshSurface navMeshSurface;
 
     private Pillar[] _pillars;
-    private void Start()
+    
+    public void LevelGeneratorSetup( Rect[] spawnRects)
     {
-        //GeneratePillars();
+        GeneratePillars(spawnRects);
         navMeshSurface.BuildNavMesh();
     }
 
-    private void GeneratePillars()
+    private void GeneratePillars( Rect[] spawnRects)
     {
+        Random.InitState(1);
         _pillars = new Pillar[count];
         for (int i = 0; i < count; i++)
         {
+            Vector3 newPos = new Vector3(Random.Range(-areaSize, areaSize), 0, Random.Range(-areaSize, areaSize));
+            if (newPos.InsideRects(spawnRects))
+            {
+                i--;
+                continue;
+            }
             var pillar = obstaclesFactory.GetPillar();
-            pillar.transform.position =
-                new Vector3(Random.Range(-areaSize, areaSize), 0, Random.Range(-areaSize, areaSize));
+            pillar.transform.position = newPos;
             _pillars[i] = pillar;
         }
     }

@@ -19,8 +19,5 @@ public class Pillar : MonoBehaviour
         OriginFactory.Reclaim(this);
     }
 
-    public virtual void GameUpdate()
-    {
-        
-    }
+
 }
