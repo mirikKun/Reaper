@@ -11,6 +11,7 @@ public class CommandsExecutor : MonoBehaviour
     [SerializeField] private PlayerController playerController;
 
     [SerializeField] private DestinationObjectPoolSimple destinationPool;
+    [SerializeField] private int maxCommandCount=5;
 
     private const int OBSTACLE_LAYER_MASK = 1 << 9;
 
@@ -29,11 +30,16 @@ public class CommandsExecutor : MonoBehaviour
     {
         _lastPos = playerController.GetPos();
         _lastPos = new Vector3(_lastPos.x, 0.2f, _lastPos.z);
+        destinationPool.SetupPool(maxCommandCount);
     }
 
    
     public void AddMoveToCommand(Vector3 pos)
     {
+        if (_todoCommands.Count >= maxCommandCount)
+        {
+            return;
+        }
         pos = CalculatePossiblePosition(new Ray(_lastPos, pos - _lastPos), pos);
         destinationPool.GetDestination().PlaceDestination(_lastPos, pos);
         _lastPos = pos;
@@ -47,11 +53,11 @@ public class CommandsExecutor : MonoBehaviour
         {
             pos = hit.point;
         }
-        else
+        else if((_lastPos - newPos).magnitude>playerController.MaxDistance)
         {
             Vector3 vector = _lastPos - newPos;
             var factor = playerController.MaxDistance / vector.magnitude;
-            newPos = new Vector3(_lastPos.x - vector.x * factor, newPos.y,
+            pos = new Vector3(_lastPos.x - vector.x * factor, newPos.y,
                 _lastPos.z - vector.z * factor) ;
         }
 

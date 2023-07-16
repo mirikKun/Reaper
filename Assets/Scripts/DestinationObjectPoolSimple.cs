@@ -19,13 +19,14 @@ public class DestinationObjectPoolSimple : MonoBehaviour
     private List<Destination> _activeDestination=new List<Destination>();
 
 
-    private void Start()
+    public void SetupPool(int maxCount)
     {
         if (bulletPrefab == null)
         {
             Debug.LogError("Need a reference to the destination prefab");
         }
 
+        _maxPoolSize = maxCount;
         //Instantiate new bullets and put them in a list for later use
         for (int i = 0; i < _initialPoolSize; i++)
         {

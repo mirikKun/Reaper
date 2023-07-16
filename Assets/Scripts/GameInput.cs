@@ -6,9 +6,8 @@ using UnityEngine;
 public class GameInput : MonoBehaviour
 {
     [SerializeField] private CommandsExecutor _commandsExecutor;
-    private const int OBSTACLE_LAYER_MASK = 1 << 9;
     [SerializeField] private Camera _camera;
-    private float _backSpace = 1;
+    
     private Ray _touchRay => _camera.ScreenPointToRay(Input.mousePosition);
     private void Update()
     {

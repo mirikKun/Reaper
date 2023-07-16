@@ -65,10 +65,9 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Move()
-    {
-        _transform.position = Vector3.Lerp(_previousPosition, _newPosition, _stateProgress);
+    {        
         _stateProgress += Time.deltaTime * _progressFactor * speedCurve.Evaluate(_stateProgress);
-
+        _transform.position = Vector3.Lerp(_previousPosition, _newPosition, _stateProgress);
         if (_stateProgress >= 1)
         {
             _stateProgress -= 1;

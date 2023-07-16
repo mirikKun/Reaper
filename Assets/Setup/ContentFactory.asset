@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90050c6cc467f684cad34770e2c44c91, type: 3}
   m_Name: ContentFactory
   m_EditorClassIdentifier: 
-  _destinationPrefab: {fileID: 4812560048957338312, guid: 34c9a087ea4fb08438decead4e79180d, type: 3}
-  _emptyPrefab: {fileID: 1274005306211550454, guid: 6bd23bd71ae706844a25932b3b3812f1, type: 3}
-  _wallPrefab: {fileID: 5754173477766770303, guid: 787af8e96a2d90440a7e553f5439fef1, type: 3}
-  _spawnPrefab: {fileID: 1210013842813527432, guid: 6dde23d9b679b964cb65aa347ea3695c, type: 3}
-  _towerPrefabs:
-  - {fileID: 4080371630801824468, guid: fe0ad7722e01dc84e87c1177d1c5386c, type: 3}
-  - {fileID: 6839540518437500591, guid: c6ffbb79dcd23a841a945ac7518cf897, type: 3}
+  _pillarConfig:
+    Prefab: {fileID: 5464359551274148348, guid: 2465d35e074356c41895f52c702227f4, type: 3}
+    Scale:
+      _min: 1
+      _max: 5.726257
+    Angle:
+      _min: -30
+      _max: 30
