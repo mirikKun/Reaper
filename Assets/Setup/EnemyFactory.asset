@@ -15,5 +15,8 @@ MonoBehaviour:
   _enemyConfig:
     Prefab: {fileID: 3069656850279708188, guid: d172ea54914af224bb2668e20bf3d624, type: 3}
     Scale:
-      _min: 3
-      _max: 3
+      _min: 1
+      _max: 2
+    Speed:
+      _min: 1.9281766
+      _max: 5.5455804

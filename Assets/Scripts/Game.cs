@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -36,7 +34,7 @@ public class Game : MonoBehaviour
         while (_progress>=1)
         {
             var enemy = enemyFactory.GetEnemy();
-            enemy.transform.position = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].GetSpawnPosition();
+            enemy.transform.position = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].GetRandomSpawnPosition();
             _enemyBehaviorCollection.Add(enemy);
             _progress--;
     

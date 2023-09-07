@@ -9,7 +9,8 @@ public class EnemyFactory: GameObjectFactory
         private class EnemyConfig
         {
             public Enemy Prefab;
-            [FloatRangeSlider(1f, 10f)] public FloatRange Scale = new FloatRange(3f);
+            [FloatRangeSlider(0.3f, 10f)] public FloatRange Scale = new FloatRange(1f);
+            [FloatRangeSlider(0.3f, 10f)] public FloatRange Speed = new FloatRange(3f);
         }
 
         private Transform playerTransform;
@@ -22,7 +23,7 @@ public class EnemyFactory: GameObjectFactory
             Enemy inctance = CreateGameObjectInstance(_enemyConfig.Prefab);
             inctance.OriginFactory = this;
             var scale = Vector3.one*_enemyConfig.Scale.RandomValueInRange;
-            inctance.Initialise(scale,playerTransform) ;
+            inctance.Initialise(scale,_enemyConfig.Speed.RandomValueInRange,playerTransform) ;
             return inctance;
         }
 
