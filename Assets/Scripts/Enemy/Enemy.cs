@@ -14,6 +14,7 @@ public class Enemy : GameBehavior
     private NavMeshAgent _navMeshAgent;
     private EnemyHealth _enemyHealth;
     private EnemyDeathEffect _enemyDeathEffect;
+    private bool dead;
 
     public void Initialise(Vector3 scale, float speed, Transform destination)
     {
@@ -33,11 +34,14 @@ public class Enemy : GameBehavior
 
     public override void Recycle()
     {
+        dead = true;
         OriginFactory.Reclaim(this);
     }
 
     public override bool GameUpdate()
     {
+        if (dead)
+            return false;
         _navMeshAgent.SetDestination(_destination.position);
         return true;
     }

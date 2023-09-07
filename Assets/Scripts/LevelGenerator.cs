@@ -13,9 +13,23 @@ public class LevelGenerator : MonoBehaviour
     
     public void LevelGeneratorSetup( Rect[] spawnRects)
     {
+        ClearLevel();
         GeneratePillars(spawnRects);
         navMeshSurface.BuildNavMesh();
     }
+
+    private void ClearLevel()
+    {
+        if (_pillars == null)
+        {
+            return;
+        }
+        foreach (var pillar in _pillars)
+        {
+            pillar.Recycle();
+        }
+    }
+    
 
     private void GeneratePillars( Rect[] spawnRects)
     {

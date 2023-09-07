@@ -10,7 +10,7 @@ public class CommandsExecutor : MonoBehaviour
     [SerializeField] private PlayerController playerController;
 
     [SerializeField] private DestinationObjectPoolSimple destinationPool;
-    [SerializeField] private int maxCommandCount=5;
+    [SerializeField] private int maxCommandCount = 5;
 
     private const int OBSTACLE_LAYER_MASK = 1 << 9;
 
@@ -27,41 +27,53 @@ public class CommandsExecutor : MonoBehaviour
 
     private void Start()
     {
+        SetStartValues();
+    }
+
+    public void SetStartValues()
+    {
+        _todoCommands.Clear();
+        _undoCommands.Clear();
+        destinationPool.RevertAllToPool();
+        _isExecuting = false;
         _lastPos = playerController.GetPos();
         _lastPos = new Vector3(_lastPos.x, 0.2f, _lastPos.z);
         destinationPool.SetupPool(maxCommandCount);
     }
 
-   
+
     public void AddMoveToCommand(Vector3 pos)
     {
         if (_todoCommands.Count >= maxCommandCount)
         {
             return;
         }
+
         pos = CalculatePossiblePosition(new Ray(_lastPos, pos - _lastPos), pos);
         destinationPool.GetDestination().PlaceDestination(_lastPos, pos);
         _lastPos = pos;
         _todoCommands.Enqueue(new MoveToCommand(playerController, pos));
     }
-    public Vector3 CalculatePossiblePosition(Ray ray,Vector3 newPos)
+
+    public Vector3 CalculatePossiblePosition(Ray ray, Vector3 newPos)
     {
         RaycastHit hit;
-        Vector3 pos=newPos;
-        if (Physics.Raycast(ray, out hit,playerController.MaxDistance,OBSTACLE_LAYER_MASK))
+        Vector3 pos = newPos;
+        if (Physics.Raycast(ray, out hit, playerController.MaxDistance, OBSTACLE_LAYER_MASK))
         {
             pos = hit.point;
         }
-        else if((_lastPos - newPos).magnitude>playerController.MaxDistance)
+        else if ((_lastPos - newPos).magnitude > playerController.MaxDistance)
         {
             Vector3 vector = _lastPos - newPos;
             var factor = playerController.MaxDistance / vector.magnitude;
             pos = new Vector3(_lastPos.x - vector.x * factor, newPos.y,
-                _lastPos.z - vector.z * factor) ;
+                _lastPos.z - vector.z * factor);
         }
 
         return pos;
     }
+
     public void StartExecuting()
     {
         _isExecuting = true;

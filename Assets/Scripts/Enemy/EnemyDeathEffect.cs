@@ -3,6 +3,7 @@ using UnityEngine;
 public class EnemyDeathEffect:MonoBehaviour
 {
     [SerializeField] private ParticleSystem deathParticle;
+    [SerializeField] private float destroyAfter=2;
     private IDamageable _damageable;
 
     public void Initialise(IDamageable damageable)
@@ -13,6 +14,8 @@ public class EnemyDeathEffect:MonoBehaviour
 
     public void Death()
     {
+        deathParticle.transform.SetParent(transform.parent);
         deathParticle.Play();
+        Destroy(deathParticle.gameObject,destroyAfter);
     }
 }

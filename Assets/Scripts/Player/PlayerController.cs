@@ -12,21 +12,18 @@ public class PlayerController : MonoBehaviour
     public float MaxDistance => maxDistance;
     private float _stateProgress = 0;
     private float _progressFactor = 0;
-    //private Vector3 _yPos = new Vector3(0, 1f, 0);
     private Transform _transform;
     private PlayerState _state=PlayerState.WaitingCommand;
 
     private void Awake()
     {
         _transform = transform;
-        
-
     }
 
     public void MoveTo(Vector3 position)
     {
         _previousPosition = _transform.position;
-        _newPosition = new Vector3(position.x,1,position.z);
+        _newPosition = new Vector3(position.x,0,position.z);
         
 
         _stateProgress = 0;
