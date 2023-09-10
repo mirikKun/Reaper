@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(
-     typeof(EnemyHealth),
+     typeof(Health),
     typeof(NavMeshAgent),
     typeof(EnemyDeathEffect))]
 public class Enemy : GameBehavior
@@ -12,25 +12,28 @@ public class Enemy : GameBehavior
     public EnemyFactory OriginFactory { get; set; }
     private Transform _destination;
     private NavMeshAgent _navMeshAgent;
-    private EnemyHealth _enemyHealth;
+    private Health _health;
     private EnemyDeathEffect _enemyDeathEffect;
+    private float _speed;
     private bool dead;
 
     public void Initialise(Vector3 scale, float speed, Transform destination)
     {
+        _speed = speed;
         _navMeshAgent = GetComponent<NavMeshAgent>();
-        _enemyHealth = GetComponent<EnemyHealth>();
+        _health = GetComponent<Health>();
         _enemyDeathEffect = GetComponent<EnemyDeathEffect>();
         
         model.localScale = scale;
         _destination = destination;
         _navMeshAgent.speed = speed;
         
-        _enemyHealth.Initialise();
-        _enemyDeathEffect.Initialise(_enemyHealth);
+        _health.Initialise();
+        _enemyDeathEffect.Initialise(_health);
         
-        _enemyHealth.OnDeath += Recycle;
+        _health.OnDeath += Recycle;
     }
+
 
     public override void Recycle()
     {
@@ -43,7 +46,18 @@ public class Enemy : GameBehavior
         if (dead)
             return false;
         _navMeshAgent.SetDestination(_destination.position);
+        
         return true;
     }
 
+    public override void Stop()
+    {
+        _navMeshAgent.speed = 0;
+        _navMeshAgent.isStopped = true;
+    }
+    
+    public override void Continue()
+    {
+        _navMeshAgent.speed = _speed;
+        _navMeshAgent.isStopped = false;    }
 }

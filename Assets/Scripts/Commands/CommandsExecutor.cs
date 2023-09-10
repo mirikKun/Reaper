@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-
-//Command pattern rebind keys example from the book "Game Programming Patterns"
-//Is also including undo, redo, and replay system
 public class CommandsExecutor : MonoBehaviour
 {
-    [SerializeField] private PlayerController playerController;
+    [SerializeField] private PlayerMover playerMover;
 
     [SerializeField] private DestinationObjectPoolSimple destinationPool;
     [SerializeField] private int maxCommandCount = 5;
@@ -17,6 +15,7 @@ public class CommandsExecutor : MonoBehaviour
     private ICommand _moveTo;
     public event Action OnExecutionStart;
     public event Action OnExecutionEnd;
+    public event Action<int> OnCommandAdding;
     private Queue<ICommand> _todoCommands = new Queue<ICommand>();
 
     private Stack<ICommand> _undoCommands = new Stack<ICommand>();
@@ -36,7 +35,7 @@ public class CommandsExecutor : MonoBehaviour
         _undoCommands.Clear();
         destinationPool.RevertAllToPool();
         _isExecuting = false;
-        _lastPos = playerController.GetPos();
+        _lastPos = playerMover.GetPos();
         _lastPos = new Vector3(_lastPos.x, 0.2f, _lastPos.z);
         destinationPool.SetupPool(maxCommandCount);
     }
@@ -52,21 +51,22 @@ public class CommandsExecutor : MonoBehaviour
         pos = CalculatePossiblePosition(new Ray(_lastPos, pos - _lastPos), pos);
         destinationPool.GetDestination().PlaceDestination(_lastPos, pos);
         _lastPos = pos;
-        _todoCommands.Enqueue(new MoveToCommand(playerController, pos));
+        _todoCommands.Enqueue(new MoveToCommand(playerMover, pos));
+        OnCommandAdding?.Invoke(maxCommandCount-_todoCommands.Count);
     }
 
     public Vector3 CalculatePossiblePosition(Ray ray, Vector3 newPos)
     {
         RaycastHit hit;
         Vector3 pos = newPos;
-        if (Physics.Raycast(ray, out hit, playerController.MaxDistance, OBSTACLE_LAYER_MASK))
+        if (Physics.Raycast(ray, out hit, playerMover.MaxDistance, OBSTACLE_LAYER_MASK))
         {
             pos = hit.point;
         }
-        else if ((_lastPos - newPos).magnitude > playerController.MaxDistance)
+        else if ((_lastPos - newPos).magnitude > playerMover.MaxDistance)
         {
             Vector3 vector = _lastPos - newPos;
-            var factor = playerController.MaxDistance / vector.magnitude;
+            var factor = playerMover.MaxDistance / vector.magnitude;
             pos = new Vector3(_lastPos.x - vector.x * factor, newPos.y,
                 _lastPos.z - vector.z * factor);
         }

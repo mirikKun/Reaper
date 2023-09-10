@@ -2,30 +2,30 @@ using UnityEngine;
 
 public class MoveToCommand : ICommand
 {
-    private PlayerController _playerController;
+    private PlayerMover _playerMover;
     private Vector3 to;
     private Vector3 from;
 
 
-    public MoveToCommand(PlayerController playerController,Vector3 newPosition)
+    public MoveToCommand(PlayerMover playerMover,Vector3 newPosition)
     {
-        this._playerController = playerController;
+        this._playerMover = playerMover;
         to = newPosition;
-        from = _playerController.GetPos();
+        from = _playerMover.GetPos();
     }
 
 
     public  void Execute()
     {
-        _playerController.MoveTo(to);
+        _playerMover.MoveTo(to);
     }
 
 
     //Undo is just the opposite
     public  void Undo()
     {
-        _playerController.MoveTo(from);
+        _playerMover.MoveTo(from);
     }
 
-    public bool IsFinished => _playerController.State==PlayerState.WaitingCommand;
+    public bool IsFinished => _playerMover.State==PlayerState.WaitingCommand;
 }

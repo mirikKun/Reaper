@@ -23,7 +23,6 @@ public class DestinationObjectPoolSimple : MonoBehaviour
         }
 
         _maxPoolSize = maxCount;
-        //Instantiate new bullets and put them in a list for later use
         for (int i = 0; i < _initialPoolSize; i++)
         {
             GenerateDestination();

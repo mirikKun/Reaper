@@ -11,6 +11,21 @@ public class EnemyBehaviorCollection
 
     }
 
+    public void StopNavMeshMoving()
+    {
+        foreach (var behavior in _behaviors)
+        {
+            behavior.Stop();
+        }
+    }
+
+    public void ContinueNavMeshMoving()
+    {
+        foreach (var behavior in _behaviors)
+        {
+            behavior.Continue();
+        }
+    }
     public void GameUpdate()
     {
         for (int i = 0; i < _behaviors.Count; i++)

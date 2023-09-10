@@ -1,21 +1,22 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class EnemyHealth : MonoBehaviour, IDamageable
+public class Health : MonoBehaviour, IDamageable
 {
-    [SerializeField] private int _currentHealth;
-    [SerializeField] private int _maxHealth = 1;
+    [SerializeField] private int currentHealth;
+    [SerializeField] private int maxHealth = 1;
 
     public int CurrentHealth
     {
-        get => _currentHealth;
-        private set => _currentHealth = value;
+        get => currentHealth;
+        private set => currentHealth = value;
     }
 
     public int MaxHealth
     {
-        get => _maxHealth;
-        private set => _maxHealth = value;
+        get => maxHealth;
+        private set => maxHealth = value;
     }
 
     public event Action OnDamageTaken;
@@ -39,5 +40,10 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         {
             OnDeath?.Invoke();
         }
+    }
+
+    public float GetHealthPercentage()
+    {
+        return (float)CurrentHealth / MaxHealth;
     }
 }
