@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 public class GameInput : MonoBehaviour
 {
-    [SerializeField] private CommandsExecutor commandsExecutor;
+    [SerializeField] private PlayerCommandsExecutor playerCommandsExecutor;
     [SerializeField] private Camera camera;
 
     private Ray _touchRay => camera.ScreenPointToRay(Input.mousePosition);
@@ -15,15 +15,17 @@ public class GameInput : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            if (Physics.Raycast(_touchRay, float.MaxValue, 1))
+            bool isOverUI = UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
+
+            if (Physics.Raycast(_touchRay, float.MaxValue, 1)&&!isOverUI)
             {
-                commandsExecutor.AddMoveToCommand(GetVerticalRayPosition(_touchRay));
+                playerCommandsExecutor.AddMoveToCommand(GetVerticalRayPosition(_touchRay));
             }
         }
 
         if (Input.GetButtonDown("Fire2"))
         {
-            commandsExecutor.StartExecuting();
+            playerCommandsExecutor.StartExecuting();
         }
     }
 

@@ -1,10 +1,11 @@
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(CinemachineVirtualCamera))]
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private CommandsExecutor commandsExecutor;
+    [FormerlySerializedAs("commandsExecutor")] [SerializeField] private PlayerCommandsExecutor playerCommandsExecutor;
     [SerializeField] private Transform player;
     [SerializeField] private Transform destination;
     private CinemachineVirtualCamera _virtualCamera;
@@ -16,13 +17,13 @@ public class CameraController : MonoBehaviour
 
     private void OnEnable()
     {
-        commandsExecutor.OnExecutionEnd += ChangeAimTargetToDestination;
-        commandsExecutor.OnExecutionStart += ChangeAimTargetToPlayer;
+        playerCommandsExecutor.OnExecutionEnd += ChangeAimTargetToDestination;
+        playerCommandsExecutor.OnExecutionStart += ChangeAimTargetToPlayer;
     }
     private void OnDisable()
     {
-        commandsExecutor.OnExecutionEnd -= ChangeAimTargetToDestination;
-        commandsExecutor.OnExecutionStart -= ChangeAimTargetToPlayer;
+        playerCommandsExecutor.OnExecutionEnd -= ChangeAimTargetToDestination;
+        playerCommandsExecutor.OnExecutionStart -= ChangeAimTargetToPlayer;
     }
 
     private void ChangeAimTargetToPlayer()

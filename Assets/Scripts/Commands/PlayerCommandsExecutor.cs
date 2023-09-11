@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class CommandsExecutor : MonoBehaviour
+public class PlayerCommandsExecutor : MonoBehaviour
 {
     [SerializeField] private PlayerMover playerMover;
 
     [SerializeField] private DestinationObjectPoolSimple destinationPool;
     [SerializeField] private int maxCommandCount = 5;
 
-    private const int OBSTACLE_LAYER_MASK = 1 << 9;
+    [SerializeField] private float commandReductionSpeed = 0.3f;
+    private float reductionProgress;
+    private const int ObstacleLayerMask = 1 << 9;
 
     private ICommand _moveTo;
     public event Action OnExecutionStart;
     public event Action OnExecutionEnd;
+    public event Action OnCommandsReady;
     public event Action<int> OnCommandAdding;
+    public event Action<float> OnCommandProgressReduction;
     private Queue<ICommand> _todoCommands = new Queue<ICommand>();
 
     private Stack<ICommand> _undoCommands = new Stack<ICommand>();
@@ -29,6 +33,23 @@ public class CommandsExecutor : MonoBehaviour
         SetStartValues();
     }
 
+    private void Update()
+    {
+        if (_isExecuting)
+        {
+            ProcessCommands();
+        }
+        else if (_todoCommands.Count == 0 && reductionProgress < maxCommandCount)
+        {
+            ChangeReductionProgress(Time.deltaTime * commandReductionSpeed);
+            OnCommandProgressReduction?.Invoke(reductionProgress / maxCommandCount);
+            if (reductionProgress >= maxCommandCount)
+            {
+                OnCommandsReady?.Invoke();
+            }
+        }
+    }
+
     public void SetStartValues()
     {
         _todoCommands.Clear();
@@ -38,12 +59,13 @@ public class CommandsExecutor : MonoBehaviour
         _lastPos = playerMover.GetPos();
         _lastPos = new Vector3(_lastPos.x, 0.2f, _lastPos.z);
         destinationPool.SetupPool(maxCommandCount);
+        reductionProgress = maxCommandCount;
     }
 
 
     public void AddMoveToCommand(Vector3 pos)
     {
-        if (_todoCommands.Count >= maxCommandCount)
+        if (_todoCommands.Count >= maxCommandCount||reductionProgress<maxCommandCount)
         {
             return;
         }
@@ -52,14 +74,21 @@ public class CommandsExecutor : MonoBehaviour
         destinationPool.GetDestination().PlaceDestination(_lastPos, pos);
         _lastPos = pos;
         _todoCommands.Enqueue(new MoveToCommand(playerMover, pos));
-        OnCommandAdding?.Invoke(maxCommandCount-_todoCommands.Count);
+
+        OnCommandAdding?.Invoke(maxCommandCount - _todoCommands.Count);
+    }
+
+    private void ChangeReductionProgress(float change)
+    {
+        reductionProgress += change;
+        reductionProgress = Mathf.Clamp(reductionProgress, 0, maxCommandCount);
     }
 
     public Vector3 CalculatePossiblePosition(Ray ray, Vector3 newPos)
     {
         RaycastHit hit;
         Vector3 pos = newPos;
-        if (Physics.Raycast(ray, out hit, playerMover.MaxDistance, OBSTACLE_LAYER_MASK))
+        if (Physics.Raycast(ray, out hit, playerMover.MaxDistance, ObstacleLayerMask))
         {
             pos = hit.point;
         }
@@ -76,17 +105,12 @@ public class CommandsExecutor : MonoBehaviour
 
     public void StartExecuting()
     {
+        ChangeReductionProgress(-_todoCommands.Count);
+
         _isExecuting = true;
         OnExecutionStart?.Invoke();
     }
 
-    private void Update()
-    {
-        if (_isExecuting)
-        {
-            ProcessCommands();
-        }
-    }
 
     private void ProcessCommands()
     {

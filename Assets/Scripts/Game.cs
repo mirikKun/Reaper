@@ -19,18 +19,16 @@ public class Game : MonoBehaviour
     private void Start()
     {
         SetStartValues();
-        player.commandsExecutor.OnCommandAdding += uiGameStateSwitch.FillActionPoint;
-        player.commandsExecutor.OnExecutionEnd += EnterFocusState;
-        player.commandsExecutor.OnExecutionStart += ExitFocusState;
-        player.health.OnDeath+=uiGameStateSwitch.TurnOnLoseScreen;
+        player.PlayerCommandsExecutor.OnCommandsReady += EnterFocusState;
+        player.PlayerCommandsExecutor.OnExecutionStart += ExitFocusState;
+        player.Health.OnDeath+=uiGameStateSwitch.TurnOnLoseScreen;
     }
 
     private void OnDisable()
     {
-        player.commandsExecutor.OnCommandAdding -= uiGameStateSwitch.FillActionPoint;
-        player.commandsExecutor.OnExecutionEnd -= EnterFocusState;
-        player.commandsExecutor.OnExecutionStart -= ExitFocusState;
-        player.health.OnDeath-=uiGameStateSwitch.TurnOnLoseScreen;
+        player.PlayerCommandsExecutor.OnCommandsReady -= EnterFocusState;
+        player.PlayerCommandsExecutor.OnExecutionStart -= ExitFocusState;
+        player.Health.OnDeath-=uiGameStateSwitch.TurnOnLoseScreen;
 
     }
 
@@ -56,7 +54,6 @@ public class Game : MonoBehaviour
     {
         _focusState = false;
         uiGameStateSwitch.TurnOffFocusBackground();
-        uiGameStateSwitch.FillActionPoints(1f);
         _enemyBehaviorCollection.ContinueNavMeshMoving();
 
     }

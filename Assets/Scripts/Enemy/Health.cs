@@ -7,6 +7,7 @@ public class Health : MonoBehaviour, IDamageable
     [SerializeField] private int currentHealth;
     [SerializeField] private int maxHealth = 1;
 
+    [field: SerializeField]public bool IsInvincible { get; set; }
     public int CurrentHealth
     {
         get => currentHealth;
@@ -29,6 +30,10 @@ public class Health : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damage)
     {
+        if (IsInvincible)
+        {
+            return;
+        }
         int damageTaken = Mathf.Clamp(damage, 0, CurrentHealth);
         CurrentHealth -= damageTaken;
         if (damageTaken != 0)
