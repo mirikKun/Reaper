@@ -6,8 +6,10 @@ using UnityEngine.Serialization;
 public class PlayerCommandsExecutor : MonoBehaviour
 {
     [SerializeField] private PlayerMover playerMover;
+    [SerializeField] private CircleAttack circleAttack;
 
-    [SerializeField] private DestinationObjectPoolSimple destinationPool;
+    [SerializeField] private DestinationsPool simplePool;
+    [SerializeField] private AttackMarkersPool circleAttackPool;
     [SerializeField] private int maxCommandCount = 5;
 
     [SerializeField] private float commandReductionSpeed = 0.3f;
@@ -54,26 +56,44 @@ public class PlayerCommandsExecutor : MonoBehaviour
     {
         _todoCommands.Clear();
         _undoCommands.Clear();
-        destinationPool.RevertAllToPool();
+        simplePool.Pool.RevertAllToPool();
+        circleAttackPool.Pool.RevertAllToPool();
         _isExecuting = false;
         _lastPos = playerMover.GetPos();
         _lastPos = new Vector3(_lastPos.x, 0.2f, _lastPos.z);
-        destinationPool.SetupPool(maxCommandCount);
+        simplePool.SetupPool(maxCommandCount);
+        circleAttackPool.SetupPool(maxCommandCount);
         reductionProgress = maxCommandCount;
     }
 
-
+    private bool CanAddNewCommand()
+    {
+        return (_todoCommands.Count < maxCommandCount && !(reductionProgress < maxCommandCount));
+    }
+    
     public void AddMoveToCommand(Vector3 pos)
     {
-        if (_todoCommands.Count >= maxCommandCount||reductionProgress<maxCommandCount)
+        if (!CanAddNewCommand())
         {
             return;
         }
 
         pos = CalculatePossiblePosition(new Ray(_lastPos, pos - _lastPos), pos);
-        destinationPool.GetDestination().PlaceDestination(_lastPos, pos);
+        simplePool.Pool.GetElements().PlaceDestination(_lastPos, pos);
         _lastPos = pos;
         _todoCommands.Enqueue(new MoveToCommand(playerMover, pos));
+
+        OnCommandAdding?.Invoke(maxCommandCount - _todoCommands.Count);
+    }
+        
+    public void AddCircleAttackCommand()
+    {
+        if (!CanAddNewCommand())
+        {
+            return;
+        }
+        circleAttackPool.Pool.GetElements().SetPosition(_lastPos);
+        _todoCommands.Enqueue(new CircleAttackCommand(circleAttack));
 
         OnCommandAdding?.Invoke(maxCommandCount - _todoCommands.Count);
     }
@@ -131,7 +151,8 @@ public class PlayerCommandsExecutor : MonoBehaviour
     private void EndExecution()
     {
         _isExecuting = false;
-        destinationPool.RevertAllToPool();
+        simplePool.Pool.RevertAllToPool();
+        circleAttackPool.Pool.RevertAllToPool();
         OnExecutionEnd?.Invoke();
     }
 

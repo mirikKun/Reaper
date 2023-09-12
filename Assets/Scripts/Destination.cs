@@ -11,8 +11,4 @@ public class Destination : MonoBehaviour
         line.SetPosition(1, new Vector3(to.x, 0.2f, to.z));
     }
 
-    public void Hide()
-    {
-        gameObject.SetActive(false);
-    }
 }
