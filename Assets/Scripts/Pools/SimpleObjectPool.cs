@@ -1,11 +1,11 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 
-public class SimpleObjectPool<T>  where T : MonoBehaviour
+public class SimpleObjectPool<T>:MonoBehaviour  where T : MonoBehaviour
 {
-    public event Action OnNewElementNeed;
+    [SerializeField] private T prefab;
+
      private T elementPrefab ;
 
     private int _initialPoolSize = 3;
@@ -15,15 +15,24 @@ public class SimpleObjectPool<T>  where T : MonoBehaviour
 
     private readonly List<T> _elements = new();
     private List<T> _activeElements=new();
+    
 
-
+    private void GenerateNewElement()
+    {
+        T newElements = Instantiate(prefab, transform);
+        newElements.gameObject.SetActive(false);
+        _elements.Add(newElements);
+    }
 
     public void SetupPool(int maxCount)
-    {
+    {   if (prefab == null)
+        {
+            Debug.LogError("Need a reference to the destination prefab");
+        }
         _maxPoolSize = maxCount;
         for (int i = 0; i < _initialPoolSize; i++)
         {
-            OnNewElementNeed?.Invoke();
+            GenerateNewElement();
         }
     }
 
@@ -35,14 +44,6 @@ public class SimpleObjectPool<T>  where T : MonoBehaviour
         }
         _activeElements.Clear();
     }
-
-    public void AddElement(T newElements)
-    {
-        
-        _elements.Add(newElements);
-    }
-    
-
 
     public T GetElements()
     {
@@ -59,8 +60,7 @@ public class SimpleObjectPool<T>  where T : MonoBehaviour
 
         if (_elements.Count < _maxPoolSize)
         {
-            OnNewElementNeed?.Invoke();
-
+            GenerateNewElement();
             T lastDestination = _elements[^1];
 
             lastDestination.gameObject.SetActive(true);

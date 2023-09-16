@@ -1,20 +1,21 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class PlayerCommandsExecutor : MonoBehaviour
 {
     [SerializeField] private PlayerMover playerMover;
     [SerializeField] private CircleAttack circleAttack;
+    [SerializeField] private ReflectAttack reflectAttack;
 
-    [SerializeField] private DestinationsPool simplePool;
-    [SerializeField] private AttackMarkersPool circleAttackPool;
+    [SerializeField] private DestinationsPool destinationPool;
+     [SerializeField] private AttackMarkersPool circleAttackPool;
+    [SerializeField] private AttackMarkersPool reflectAttackPool;
     [SerializeField] private int maxCommandCount = 5;
 
     [SerializeField] private float commandReductionSpeed = 0.3f;
     private float reductionProgress;
-    private const int ObstacleLayerMask = 1 << 9;
+    private const  int NonPlayerLayer =~ 1 << 7;
 
     private ICommand _moveTo;
     public event Action OnExecutionStart;
@@ -56,13 +57,15 @@ public class PlayerCommandsExecutor : MonoBehaviour
     {
         _todoCommands.Clear();
         _undoCommands.Clear();
-        simplePool.Pool.RevertAllToPool();
-        circleAttackPool.Pool.RevertAllToPool();
+        destinationPool.RevertAllToPool();
+        circleAttackPool.RevertAllToPool();
+        reflectAttackPool.RevertAllToPool();
         _isExecuting = false;
         _lastPos = playerMover.GetPos();
         _lastPos = new Vector3(_lastPos.x, 0.2f, _lastPos.z);
-        simplePool.SetupPool(maxCommandCount);
+        destinationPool.SetupPool(maxCommandCount);
         circleAttackPool.SetupPool(maxCommandCount);
+        reflectAttackPool.SetupPool(maxCommandCount);
         reductionProgress = maxCommandCount;
     }
 
@@ -79,7 +82,7 @@ public class PlayerCommandsExecutor : MonoBehaviour
         }
 
         pos = CalculatePossiblePosition(new Ray(_lastPos, pos - _lastPos), pos);
-        simplePool.Pool.GetElements().PlaceDestination(_lastPos, pos);
+        destinationPool.GetElements().PlaceDestination(_lastPos, pos);
         _lastPos = pos;
         _todoCommands.Enqueue(new MoveToCommand(playerMover, pos));
 
@@ -92,8 +95,19 @@ public class PlayerCommandsExecutor : MonoBehaviour
         {
             return;
         }
-        circleAttackPool.Pool.GetElements().SetPosition(_lastPos);
+        circleAttackPool.GetElements().SetPosition(_lastPos);
         _todoCommands.Enqueue(new CircleAttackCommand(circleAttack));
+
+        OnCommandAdding?.Invoke(maxCommandCount - _todoCommands.Count);
+    }       
+    public void AddReflectAttackCommand()
+    {
+        if (!CanAddNewCommand())
+        {
+            return;
+        }
+        reflectAttackPool.GetElements().SetPosition(_lastPos);
+        _todoCommands.Enqueue(new ReflectAttackCommand(reflectAttack));
 
         OnCommandAdding?.Invoke(maxCommandCount - _todoCommands.Count);
     }
@@ -108,7 +122,7 @@ public class PlayerCommandsExecutor : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 pos = newPos;
-        if (Physics.Raycast(ray, out hit, playerMover.MaxDistance, ObstacleLayerMask))
+        if (Physics.Raycast(ray, out hit, playerMover.MaxDistance, NonPlayerLayer))
         {
             pos = hit.point;
         }
@@ -151,8 +165,9 @@ public class PlayerCommandsExecutor : MonoBehaviour
     private void EndExecution()
     {
         _isExecuting = false;
-        simplePool.Pool.RevertAllToPool();
-        circleAttackPool.Pool.RevertAllToPool();
+        destinationPool.RevertAllToPool();
+        circleAttackPool.RevertAllToPool();
+        reflectAttackPool.RevertAllToPool();
         OnExecutionEnd?.Invoke();
     }
 

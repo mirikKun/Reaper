@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,13 +6,6 @@ public class UIGameStateSwitch : MonoBehaviour
    [SerializeField] private Image focusBackground;
    [SerializeField] private GameObject loseScreen;
 
-
-
-
-
-
-   
-   
    public void TurnOnLoseScreen()
    {
       loseScreen.SetActive(true);

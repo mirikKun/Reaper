@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 
@@ -13,7 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] private UIPlayerStateDisplay uiPlayerStateDisplay;
 
     private void OnEnable()
-    {        
+    {
         playerCommandsExecutor.OnCommandAdding += uiPlayerStateDisplay.FillActionPoint;
         playerCommandsExecutor.OnCommandProgressReduction += uiPlayerStateDisplay.FillActionPoints;
 
@@ -21,6 +20,7 @@ public class Player : MonoBehaviour
         playerCommandsExecutor.OnExecutionEnd += EnableDamageable;
         playerCommandsExecutor.OnExecutionStart += DisableDamageable;
     }
+
     private void OnDisable()
     {
         playerCommandsExecutor.OnCommandAdding -= uiPlayerStateDisplay.FillActionPoint;
@@ -38,14 +38,14 @@ public class Player : MonoBehaviour
 
     private void EnableDamageable()
     {
-        health.IsInvincible=false;
+        health.IsInvincible = false;
     }
 
     private void DisableDamageable()
     {
         health.IsInvincible = true;
-
     }
+
     public void Initialise()
     {
         health.Initialise();
@@ -54,5 +54,4 @@ public class Player : MonoBehaviour
         uiPlayerStateDisplay.ChangeActionPointCount(5);
         EnableDamageable();
     }
-    
 }
