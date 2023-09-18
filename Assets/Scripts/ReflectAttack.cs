@@ -39,7 +39,6 @@ public class ReflectAttack : MonoBehaviour
         {
             if (Physics.OverlapSphereNonAlloc(checkPoint, checkRadius ,buffer,ENEMY_LAYER_MASK)>0)
             {
-                Debug.Log("ZZZZZZZZZZZZZZZZZZZZz");
                 direction = buffer[0].transform.position - checkPoint;
                 _progress=maxWaitingTime;
             }

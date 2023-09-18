@@ -1,17 +1,21 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [SelectionBase]
 public class EnemySpawnPoint : MonoBehaviour
 {
     [SerializeField] private Transform model;
+    [SerializeField] private Vector2 innerOffset;
     private Rect _rect;
 
     public Rect GetSpawnRect()
     {
         Vector3 pos = transform.position;
         Vector3 scale = model.localScale;
-        _rect.Set(pos.x - scale.x / 2, pos.z - scale.z / 2, scale.x, scale.z);
-        Debug.Log(_rect.width);
+        _rect.Set(pos.x - scale.x / 2+innerOffset.x, pos.z - scale.z / 2+innerOffset.y, scale.x-innerOffset.x*2, scale.z-innerOffset.y*2);
+        Debug.Log(scale);
+        Debug.Log(_rect);
         return _rect;
     }
 
@@ -22,7 +26,20 @@ public class EnemySpawnPoint : MonoBehaviour
 
     public Vector3 GetRandomSpawnPosition()
     {
-        return transform.position + new Vector3(Random.Range(-_rect.width / 2, _rect.width / 2), 0,
-            Random.Range(-_rect.height / 2, _rect.height / 2));
+   
+        Vector3 offset = new Vector3(Random.Range(-_rect.width, _rect.width) / 2, 0,
+            Random.Range(-_rect.height, _rect.height) / 2);
+
+        Vector3 newPoint = transform.position + offset;
+
+        return newPoint;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Vector3 position = transform.position;
+        position.y += 0.01f;
+        Gizmos.DrawWireCube(position, new Vector3(_rect.width,3,_rect.height));
     }
 }

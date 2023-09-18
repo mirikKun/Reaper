@@ -20,15 +20,14 @@ public class Game : MonoBehaviour
         SetStartValues();
         player.PlayerCommandsExecutor.OnCommandsReady += EnterFocusState;
         player.PlayerCommandsExecutor.OnExecutionStart += ExitFocusState;
-        player.Health.OnDeath+=uiGameStateSwitch.TurnOnLoseScreen;
+        player.Health.OnDeath += uiGameStateSwitch.TurnOnLoseScreen;
     }
 
     private void OnDisable()
     {
         player.PlayerCommandsExecutor.OnCommandsReady -= EnterFocusState;
         player.PlayerCommandsExecutor.OnExecutionStart -= ExitFocusState;
-        player.Health.OnDeath-=uiGameStateSwitch.TurnOnLoseScreen;
-
+        player.Health.OnDeath -= uiGameStateSwitch.TurnOnLoseScreen;
     }
 
     public void SwitchFocusState()
@@ -42,6 +41,7 @@ public class Game : MonoBehaviour
             EnterFocusState();
         }
     }
+
     private void EnterFocusState()
     {
         _focusState = true;
@@ -54,7 +54,6 @@ public class Game : MonoBehaviour
         _focusState = false;
         uiGameStateSwitch.TurnOffFocusBackground();
         _enemyBehaviorCollection.ContinueNavMeshMoving();
-
     }
 
     public void SetStartValues()
@@ -94,9 +93,10 @@ public class Game : MonoBehaviour
         _progress += rate * Time.deltaTime;
         while (_progress >= 1)
         {
+
+            Vector3 newPosition = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].GetRandomSpawnPosition();
             var enemy = enemyFactory.GetEnemy();
-            enemy.transform.position =
-                enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].GetRandomSpawnPosition();
+            enemy.transform.position = newPosition;
             _enemyBehaviorCollection.Add(enemy);
             _progress--;
         }

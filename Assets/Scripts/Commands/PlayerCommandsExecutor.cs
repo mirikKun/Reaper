@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class PlayerCommandsExecutor : MonoBehaviour
 {
+    [SerializeField] private CinemachineTargetGroup targetGroup;
     [SerializeField] private PlayerMover playerMover;
     [SerializeField] private CircleAttack circleAttack;
     [SerializeField] private ReflectAttack reflectAttack;
@@ -82,7 +84,10 @@ public class PlayerCommandsExecutor : MonoBehaviour
         }
 
         pos = CalculatePossiblePosition(new Ray(_lastPos, pos - _lastPos), pos);
-        destinationPool.GetElements().PlaceDestination(_lastPos, pos);
+        var destination = destinationPool.GetElement();
+        destination.PlaceDestination(_lastPos, pos);
+        targetGroup.AddMember(destination.transform,1,0);
+
         _lastPos = pos;
         _todoCommands.Enqueue(new MoveToCommand(playerMover, pos));
 
@@ -95,7 +100,7 @@ public class PlayerCommandsExecutor : MonoBehaviour
         {
             return;
         }
-        circleAttackPool.GetElements().SetPosition(_lastPos);
+        circleAttackPool.GetElement().SetPosition(_lastPos);
         _todoCommands.Enqueue(new CircleAttackCommand(circleAttack));
 
         OnCommandAdding?.Invoke(maxCommandCount - _todoCommands.Count);
@@ -106,7 +111,7 @@ public class PlayerCommandsExecutor : MonoBehaviour
         {
             return;
         }
-        reflectAttackPool.GetElements().SetPosition(_lastPos);
+        reflectAttackPool.GetElement().SetPosition(_lastPos);
         _todoCommands.Enqueue(new ReflectAttackCommand(reflectAttack));
 
         OnCommandAdding?.Invoke(maxCommandCount - _todoCommands.Count);
@@ -165,9 +170,14 @@ public class PlayerCommandsExecutor : MonoBehaviour
     private void EndExecution()
     {
         _isExecuting = false;
+        foreach (var destination in destinationPool.ActiveElements)
+        {
+            targetGroup.RemoveMember(destination.transform);
+        }
         destinationPool.RevertAllToPool();
         circleAttackPool.RevertAllToPool();
         reflectAttackPool.RevertAllToPool();
+
         OnExecutionEnd?.Invoke();
     }
 

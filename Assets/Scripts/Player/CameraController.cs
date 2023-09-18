@@ -1,3 +1,4 @@
+using System;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -5,35 +6,44 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(CinemachineVirtualCamera))]
 public class CameraController : MonoBehaviour
 {
-    [FormerlySerializedAs("commandsExecutor")] [SerializeField] private PlayerCommandsExecutor playerCommandsExecutor;
-    [SerializeField] private Transform player;
-    [SerializeField] private Transform destination;
-    private CinemachineVirtualCamera _virtualCamera;
+     [SerializeField] private PlayerCommandsExecutor playerCommandsExecutor;
+     [SerializeField] private float executionCameraDamping;
+     [SerializeField] private float preparingCameraDamping;
+    private CinemachineTransposer _virtualCameraBody;
+    
 
     private void Awake()
     {
-        _virtualCamera=GetComponent<CinemachineVirtualCamera>();
+        _virtualCameraBody=GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineTransposer>();
+    }
+
+    private void Start()
+    {
+        ChangeCameraSpeedToPreparing();
     }
 
     private void OnEnable()
     {
-        playerCommandsExecutor.OnExecutionEnd += ChangeAimTargetToDestination;
-        playerCommandsExecutor.OnExecutionStart += ChangeAimTargetToPlayer;
+        playerCommandsExecutor.OnCommandsReady += ChangeCameraSpeedToPreparing;
+        playerCommandsExecutor.OnExecutionStart += ChangeCameraSpeedToExecution;
     }
     private void OnDisable()
     {
-        playerCommandsExecutor.OnExecutionEnd -= ChangeAimTargetToDestination;
-        playerCommandsExecutor.OnExecutionStart -= ChangeAimTargetToPlayer;
+        playerCommandsExecutor.OnCommandsReady -= ChangeCameraSpeedToPreparing;
+        playerCommandsExecutor.OnExecutionStart -= ChangeCameraSpeedToExecution;
     }
 
-    private void ChangeAimTargetToPlayer()
+    private void ChangeCameraSpeedToExecution()
     {
-        _virtualCamera.Follow = player;
-        _virtualCamera.LookAt = player;
+        _virtualCameraBody.m_XDamping = executionCameraDamping;
+        _virtualCameraBody.m_YDamping = executionCameraDamping;
+        _virtualCameraBody.m_ZDamping = executionCameraDamping;
     }
-    private void ChangeAimTargetToDestination()
+    private void ChangeCameraSpeedToPreparing()
     {
-        _virtualCamera.Follow = destination;
-        _virtualCamera.LookAt = destination;
+        _virtualCameraBody.m_XDamping = preparingCameraDamping;
+        _virtualCameraBody.m_YDamping = preparingCameraDamping;
+        _virtualCameraBody.m_ZDamping = preparingCameraDamping;
     }
+
 }

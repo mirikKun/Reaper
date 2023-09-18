@@ -15,7 +15,8 @@ public class SimpleObjectPool<T>:MonoBehaviour  where T : MonoBehaviour
 
     private readonly List<T> _elements = new();
     private List<T> _activeElements=new();
-    
+
+    public List<T> ActiveElements => _activeElements;
 
     private void GenerateNewElement()
     {
@@ -45,7 +46,7 @@ public class SimpleObjectPool<T>:MonoBehaviour  where T : MonoBehaviour
         _activeElements.Clear();
     }
 
-    public T GetElements()
+    public T GetElement()
     {
         foreach (T destination in _elements)
         {

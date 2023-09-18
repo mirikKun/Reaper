@@ -1,4 +1,5 @@
 using UnityEngine;
+[SelectionBase]
 
 public abstract class GameBehavior : MonoBehaviour
 {

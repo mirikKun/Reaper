@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 39c412405e6d61446a8ef0fa049f7519, type: 2}
+  - {fileID: 2100000, guid: 1253792352146844eab8974193e2e1a3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -149,3 +149,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 4841469819706521496}
+  innerOffset: {x: 0, y: 0}
