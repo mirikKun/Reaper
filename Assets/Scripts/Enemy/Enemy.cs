@@ -1,8 +1,10 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(
-     typeof(Health),
+    typeof(Health),
     typeof(NavMeshAgent),
     typeof(EnemyDeathEffect))]
 public class Enemy : GameBehavior
@@ -15,6 +17,7 @@ public class Enemy : GameBehavior
     private Health _health;
     private EnemyDeathEffect _enemyDeathEffect;
     private float _speed;
+    private bool _started;
     private bool dead;
 
     public void Initialise(Vector3 scale, float speed, Transform destination)
@@ -23,15 +26,16 @@ public class Enemy : GameBehavior
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _health = GetComponent<Health>();
         _enemyDeathEffect = GetComponent<EnemyDeathEffect>();
-        
+
         model.localScale = scale;
         _destination = destination;
         _navMeshAgent.speed = speed;
-        
+
         _health.Initialise();
         _enemyDeathEffect.Initialise(_health);
-        
+
         _health.OnDeath += Recycle;
+        StartCoroutine(EnableAgentWithDelay());
     }
 
 
@@ -43,10 +47,13 @@ public class Enemy : GameBehavior
 
     public override bool GameUpdate()
     {
+        
         if (dead)
             return false;
-        _navMeshAgent.SetDestination(_destination.position);
-        
+        if(_started)
+        {
+            _navMeshAgent.SetDestination(_destination.position);
+        }
         return true;
     }
 
@@ -55,9 +62,17 @@ public class Enemy : GameBehavior
         _navMeshAgent.speed = 0;
         _navMeshAgent.isStopped = true;
     }
-    
+
     public override void Continue()
     {
         _navMeshAgent.speed = _speed;
-        _navMeshAgent.isStopped = false;    }
+        _navMeshAgent.isStopped = false;
+    }
+
+    private IEnumerator EnableAgentWithDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        _navMeshAgent.enabled = true;
+        _started = true;
+    }
 }

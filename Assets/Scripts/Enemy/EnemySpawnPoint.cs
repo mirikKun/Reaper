@@ -6,18 +6,16 @@ using Random = UnityEngine.Random;
 public class EnemySpawnPoint : MonoBehaviour
 {
     [SerializeField] private Transform model;
-    [SerializeField] private Vector2 innerOffset;
     private Rect _rect;
-
     public Rect GetSpawnRect()
     {
         Vector3 pos = transform.position;
         Vector3 scale = model.localScale;
-        _rect.Set(pos.x - scale.x / 2+innerOffset.x, pos.z - scale.z / 2+innerOffset.y, scale.x-innerOffset.x*2, scale.z-innerOffset.y*2);
-        Debug.Log(scale);
-        Debug.Log(_rect);
+        _rect.Set(pos.x - scale.x / 2, pos.z - scale.z / 2, scale.x, scale.z);
         return _rect;
     }
+
+ 
 
     public Vector3 GetSpawnPosition()
     {

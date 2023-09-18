@@ -11,13 +11,13 @@ public class PlayerCommandsExecutor : MonoBehaviour
     [SerializeField] private ReflectAttack reflectAttack;
 
     [SerializeField] private DestinationsPool destinationPool;
-     [SerializeField] private AttackMarkersPool circleAttackPool;
+    [SerializeField] private AttackMarkersPool circleAttackPool;
     [SerializeField] private AttackMarkersPool reflectAttackPool;
     [SerializeField] private int maxCommandCount = 5;
 
     [SerializeField] private float commandReductionSpeed = 0.3f;
     private float reductionProgress;
-    private const  int NonPlayerLayer =~ 1 << 7;
+    private const int ObstacleLayer =  1 << 9;
 
     private ICommand _moveTo;
     public event Action OnExecutionStart;
@@ -75,7 +75,7 @@ public class PlayerCommandsExecutor : MonoBehaviour
     {
         return (_todoCommands.Count < maxCommandCount && !(reductionProgress < maxCommandCount));
     }
-    
+
     public void AddMoveToCommand(Vector3 pos)
     {
         if (!CanAddNewCommand())
@@ -86,31 +86,34 @@ public class PlayerCommandsExecutor : MonoBehaviour
         pos = CalculatePossiblePosition(new Ray(_lastPos, pos - _lastPos), pos);
         var destination = destinationPool.GetElement();
         destination.PlaceDestination(_lastPos, pos);
-        targetGroup.AddMember(destination.transform,1,0);
+        targetGroup.AddMember(destination.transform, 1, 0);
 
         _lastPos = pos;
         _todoCommands.Enqueue(new MoveToCommand(playerMover, pos));
 
         OnCommandAdding?.Invoke(maxCommandCount - _todoCommands.Count);
     }
-        
+
     public void AddCircleAttackCommand()
     {
         if (!CanAddNewCommand())
         {
             return;
         }
+
         circleAttackPool.GetElement().SetPosition(_lastPos);
         _todoCommands.Enqueue(new CircleAttackCommand(circleAttack));
 
         OnCommandAdding?.Invoke(maxCommandCount - _todoCommands.Count);
-    }       
+    }
+
     public void AddReflectAttackCommand()
     {
         if (!CanAddNewCommand())
         {
             return;
         }
+
         reflectAttackPool.GetElement().SetPosition(_lastPos);
         _todoCommands.Enqueue(new ReflectAttackCommand(reflectAttack));
 
@@ -127,7 +130,7 @@ public class PlayerCommandsExecutor : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 pos = newPos;
-        if (Physics.Raycast(ray, out hit, playerMover.MaxDistance, NonPlayerLayer))
+        if (Physics.Raycast(ray, out hit, playerMover.MaxDistance, ObstacleLayer))
         {
             pos = hit.point;
         }
@@ -174,6 +177,7 @@ public class PlayerCommandsExecutor : MonoBehaviour
         {
             targetGroup.RemoveMember(destination.transform);
         }
+
         destinationPool.RevertAllToPool();
         circleAttackPool.RevertAllToPool();
         reflectAttackPool.RevertAllToPool();

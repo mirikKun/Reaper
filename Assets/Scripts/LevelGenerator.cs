@@ -17,7 +17,6 @@ public class LevelGenerator : MonoBehaviour
         GeneratePillars(spawnRects);
         navMeshSurface.BuildNavMesh();
     }
-
     private void ClearLevel()
     {
         if (_pillars == null)
@@ -38,7 +37,7 @@ public class LevelGenerator : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             Vector3 newPos = new Vector3(Random.Range(-areaSize, areaSize), 0, Random.Range(-areaSize, areaSize));
-            if (newPos.InsideRects(spawnRects))
+            if (newPos.InsideRects(spawnRects,obstaclesFactory.MaxScale/2))
             {
                 i--;
                 continue;

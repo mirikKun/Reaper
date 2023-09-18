@@ -8,8 +8,8 @@ using Random = UnityEngine.Random;
 public struct FloatRange
 {
     [SerializeField]private float _min, _max;
-    private float Min=>_min;
-    private float Max=>_max;
+    public float Min=>_min;
+    public float Max=>_max;
 
     public float RandomValueInRange
     {

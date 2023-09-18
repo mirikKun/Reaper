@@ -14,7 +14,8 @@ public class ObstaclesFactory : GameObjectFactory
         [FloatRangeSlider(-30f, 30f)] public FloatRange Angle = new FloatRange(0f);
 
     }
-    
+
+    public float MaxScale => _pillarConfig.Scale.Max;
     public Pillar GetPillar()
     {
         Pillar inctance = CreateGameObjectInstance(_pillarConfig.Prefab);
