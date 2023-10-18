@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class MoveToCommand : ICommand
 {
-    private PlayerMover _playerMover;
-    private Vector3 to;
-    private Vector3 from;
+    protected PlayerMover _playerMover;
+    protected Vector3 to;
+    protected Vector3 from;
 
 
-    public MoveToCommand(PlayerMover playerMover,Vector3 newPosition)
+    public MoveToCommand(PlayerMover playerMover,Vector3 lastPosition,Vector3 newPosition)
     {
         this._playerMover = playerMover;
         to = newPosition;
-        from = _playerMover.GetPos();
+        from = lastPosition;
     }
 
 
@@ -27,5 +27,10 @@ public class MoveToCommand : ICommand
         _playerMover.MoveTo(from);
     }
 
-    public bool IsFinished => _playerMover.State==PlayerState.WaitingCommand;
+    public MoveToCommand GetReversedCommand()
+    {
+        return new MoveToCommand(_playerMover,to, from);
+    }
+
+    public virtual bool IsFinished => _playerMover.State==PlayerState.WaitingCommand;
 }

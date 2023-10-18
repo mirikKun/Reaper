@@ -23,6 +23,7 @@ public class EnemyBehaviorCollection
     {
         foreach (var behavior in _behaviors)
         {
+ 
             behavior.Continue();
         }
     }

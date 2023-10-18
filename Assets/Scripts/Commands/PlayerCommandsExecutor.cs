@@ -13,13 +13,13 @@ public class PlayerCommandsExecutor : MonoBehaviour
     [SerializeField] private DestinationsPool destinationPool;
     [SerializeField] private AttackMarkersPool circleAttackPool;
     [SerializeField] private AttackMarkersPool reflectAttackPool;
+    [SerializeField] private AttackMarker revertAttackMarker;
     [SerializeField] private int maxCommandCount = 5;
 
     [SerializeField] private float commandReductionSpeed = 0.3f;
     private float reductionProgress;
     private const int ObstacleLayer =  1 << 9;
 
-    private ICommand _moveTo;
     public event Action OnExecutionStart;
     public event Action OnExecutionEnd;
     public event Action OnCommandsReady;
@@ -31,7 +31,9 @@ public class PlayerCommandsExecutor : MonoBehaviour
 
     private ICommand _currentCommand;
     public Vector3 _lastPos;
+    public Vector3 _startPos;
     private bool _isExecuting = false;
+    private int _currentCommandCount;
 
     private void Start()
     {
@@ -44,7 +46,7 @@ public class PlayerCommandsExecutor : MonoBehaviour
         {
             ProcessCommands();
         }
-        else if (_todoCommands.Count == 0 && reductionProgress < maxCommandCount)
+        else if (_currentCommandCount == 0 && reductionProgress < maxCommandCount)
         {
             ChangeReductionProgress(Time.deltaTime * commandReductionSpeed);
             OnCommandProgressReduction?.Invoke(reductionProgress / maxCommandCount);
@@ -57,6 +59,10 @@ public class PlayerCommandsExecutor : MonoBehaviour
 
     public void SetStartValues()
     {
+        playerMover.FastMoving = false;
+
+        _currentCommandCount = 0;
+
         _todoCommands.Clear();
         _undoCommands.Clear();
         destinationPool.RevertAllToPool();
@@ -73,7 +79,7 @@ public class PlayerCommandsExecutor : MonoBehaviour
 
     private bool CanAddNewCommand()
     {
-        return (_todoCommands.Count < maxCommandCount && !(reductionProgress < maxCommandCount));
+        return (_currentCommandCount < maxCommandCount && !(reductionProgress < maxCommandCount));
     }
 
     public void AddMoveToCommand(Vector3 pos)
@@ -88,10 +94,9 @@ public class PlayerCommandsExecutor : MonoBehaviour
         destination.PlaceDestination(_lastPos, pos);
         targetGroup.AddMember(destination.transform, 1, 0);
 
+        AddCommand(new MoveToCommand(playerMover,_lastPos, pos));
         _lastPos = pos;
-        _todoCommands.Enqueue(new MoveToCommand(playerMover, pos));
 
-        OnCommandAdding?.Invoke(maxCommandCount - _todoCommands.Count);
     }
 
     public void AddCircleAttackCommand()
@@ -102,9 +107,7 @@ public class PlayerCommandsExecutor : MonoBehaviour
         }
 
         circleAttackPool.GetElement().SetPosition(_lastPos);
-        _todoCommands.Enqueue(new CircleAttackCommand(circleAttack));
-
-        OnCommandAdding?.Invoke(maxCommandCount - _todoCommands.Count);
+        AddCommand(new CircleAttackCommand(circleAttack));
     }
 
     public void AddReflectAttackCommand()
@@ -115,11 +118,49 @@ public class PlayerCommandsExecutor : MonoBehaviour
         }
 
         reflectAttackPool.GetElement().SetPosition(_lastPos);
-        _todoCommands.Enqueue(new ReflectAttackCommand(reflectAttack));
+        AddCommand(new ReflectAttackCommand(reflectAttack));
 
-        OnCommandAdding?.Invoke(maxCommandCount - _todoCommands.Count);
+    }
+    public void AddReverseAttackCommand()
+    {
+        if (!CanAddNewCommand()||_currentCommandCount<1)
+        {
+            return;
+        }
+
+        revertAttackMarker.gameObject.SetActive(true);
+        revertAttackMarker.SetPosition(_lastPos);
+        ICommand[] commands = _todoCommands.ToArray();
+        Array.Reverse(commands);
+        _todoCommands.Enqueue(new ChangeSpeedCommand(playerMover));
+
+        AddCommandsQueue(commands);
+        _todoCommands.Enqueue(new ChangeSpeedCommand(playerMover));
+        _lastPos = _startPos;
+        StartExecuting();
     }
 
+    private void AddCommandsQueue(ICommand[] commands)
+    {
+        _currentCommandCount++;
+        foreach (var command in commands)
+        {
+            if (command is MoveToCommand moveToCommand)
+            {
+                _todoCommands.Enqueue(moveToCommand.GetReversedCommand());
+
+            }
+        }
+        OnCommandAdding?.Invoke(maxCommandCount - _currentCommandCount);
+
+    }
+
+    private void AddCommand(ICommand command)
+    {
+        _todoCommands.Enqueue(command);
+        _currentCommandCount++;
+        OnCommandAdding?.Invoke(maxCommandCount - _currentCommandCount);
+    }
     private void ChangeReductionProgress(float change)
     {
         reductionProgress += change;
@@ -147,7 +188,7 @@ public class PlayerCommandsExecutor : MonoBehaviour
 
     public void StartExecuting()
     {
-        ChangeReductionProgress(-_todoCommands.Count);
+        ChangeReductionProgress(-_currentCommandCount);
 
         _isExecuting = true;
         OnExecutionStart?.Invoke();
@@ -172,6 +213,10 @@ public class PlayerCommandsExecutor : MonoBehaviour
 
     private void EndExecution()
     {
+        _startPos = _lastPos;
+        _currentCommandCount = 0;
+        playerMover.FastMoving = false;
+
         _isExecuting = false;
         foreach (var destination in destinationPool.ActiveElements)
         {
@@ -181,6 +226,7 @@ public class PlayerCommandsExecutor : MonoBehaviour
         destinationPool.RevertAllToPool();
         circleAttackPool.RevertAllToPool();
         reflectAttackPool.RevertAllToPool();
+        revertAttackMarker.gameObject.SetActive(false);
 
         OnExecutionEnd?.Invoke();
     }

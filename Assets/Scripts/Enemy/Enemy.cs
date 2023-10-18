@@ -59,14 +59,16 @@ public class Enemy : GameBehavior
 
     public override void Stop()
     {
+        if (dead)
+            return ;
         _navMeshAgent.speed = 0;
-        _navMeshAgent.isStopped = true;
     }
 
     public override void Continue()
     {
+        if (dead)
+            return ;
         _navMeshAgent.speed = _speed;
-        _navMeshAgent.isStopped = false;
     }
 
     private IEnumerator EnableAgentWithDelay()
