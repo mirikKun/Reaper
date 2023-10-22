@@ -1,29 +1,32 @@
-using UnityEngine;
+using Players;
 
-public class ChangeSpeedCommand : ICommand
-
+namespace Commands
 {
-    protected PlayerMover _playerMover;
+    public class ChangeSpeedCommand : ICommand
 
-
-
-    public ChangeSpeedCommand(PlayerMover playerMover)
     {
-        _playerMover = playerMover;
-    }
+        protected PlayerMover _playerMover;
 
 
-    public void Execute()
-    {
-        _playerMover.FastMoving=!_playerMover.FastMoving;
-    }
+
+        public ChangeSpeedCommand(PlayerMover playerMover)
+        {
+            _playerMover = playerMover;
+        }
 
 
-    public void Undo()
-    {
-        _playerMover.FastMoving=!_playerMover.FastMoving;
-    }
+        public void Execute()
+        {
+            _playerMover.FastMoving=!_playerMover.FastMoving;
+        }
+
+
+        public void Undo()
+        {
+            _playerMover.FastMoving=!_playerMover.FastMoving;
+        }
     
 
-    public virtual bool IsFinished => true;
+        public virtual bool IsFinished => true;
+    }
 }

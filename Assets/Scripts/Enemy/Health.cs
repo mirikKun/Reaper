@@ -1,53 +1,56 @@
 using System;
 using UnityEngine;
 
-public class Health : MonoBehaviour, IDamageable
+namespace Enemy
 {
-    [SerializeField] private int currentHealth;
-    [SerializeField] private int maxHealth = 1;
-
-    [field: SerializeField]public bool IsInvincible { get; set; }
-    public int CurrentHealth
+    public class Health : MonoBehaviour, IDamageable
     {
-        get => currentHealth;
-        private set => currentHealth = value;
-    }
+        [SerializeField] private int currentHealth;
+        [SerializeField] private int maxHealth = 1;
 
-    public int MaxHealth
-    {
-        get => maxHealth;
-        private set => maxHealth = value;
-    }
-
-    public event Action OnDamageTaken;
-    public event Action OnDeath;
-
-    public void Initialise()
-    {
-        CurrentHealth = MaxHealth;
-    }
-
-    public void TakeDamage(int damage)
-    {
-        if (IsInvincible)
+        [field: SerializeField]public bool IsInvincible { get; set; }
+        public int CurrentHealth
         {
-            return;
-        }
-        int damageTaken = Mathf.Clamp(damage, 0, CurrentHealth);
-        CurrentHealth -= damageTaken;
-        if (damageTaken != 0)
-        {
-            OnDamageTaken?.Invoke();
+            get => currentHealth;
+            private set => currentHealth = value;
         }
 
-        if (CurrentHealth == 0 && damageTaken != 0)
+        public int MaxHealth
         {
-            OnDeath?.Invoke();
+            get => maxHealth;
+            private set => maxHealth = value;
         }
-    }
 
-    public float GetHealthPercentage()
-    {
-        return (float)CurrentHealth / MaxHealth;
+        public event Action OnDamageTaken;
+        public event Action OnDeath;
+
+        public void Initialise()
+        {
+            CurrentHealth = MaxHealth;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            if (IsInvincible)
+            {
+                return;
+            }
+            int damageTaken = Mathf.Clamp(damage, 0, CurrentHealth);
+            CurrentHealth -= damageTaken;
+            if (damageTaken != 0)
+            {
+                OnDamageTaken?.Invoke();
+            }
+
+            if (CurrentHealth == 0 && damageTaken != 0)
+            {
+                OnDeath?.Invoke();
+            }
+        }
+
+        public float GetHealthPercentage()
+        {
+            return (float)CurrentHealth / MaxHealth;
+        }
     }
 }

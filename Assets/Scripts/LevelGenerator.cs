@@ -1,3 +1,4 @@
+using Factories;
 using Unity.AI.Navigation;
 using UnityEngine;
 using Random = UnityEngine.Random;

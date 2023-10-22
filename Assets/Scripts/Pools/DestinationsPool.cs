@@ -1,4 +1,7 @@
-public class DestinationsPool : SimpleObjectPool<Destination>
+namespace Pools
 {
+    public class DestinationsPool : SimpleObjectPool<Destination>
+    {
     
+    }
 }

@@ -1,14 +1,16 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class EnemyFactory: GameObjectFactory
+namespace Factories
+{
+    [CreateAssetMenu]
+    public class EnemyFactory: GameObjectFactory
     {
         [SerializeField] private EnemyConfig _enemyConfig;
         [Serializable]
         private class EnemyConfig
         {
-            public Enemy Prefab;
+            public Enemy.Enemy Prefab;
             [FloatRangeSlider(0.3f, 10f)] public FloatRange Scale = new FloatRange(1f);
             [FloatRangeSlider(0.3f, 10f)] public FloatRange Speed = new FloatRange(3f);
         }
@@ -18,17 +20,18 @@ public class EnemyFactory: GameObjectFactory
         {
             playerTransform = player;
         }
-        public Enemy GetEnemy()
+        public Enemy.Enemy GetEnemy()
         {
-            Enemy inctance = CreateGameObjectInstance(_enemyConfig.Prefab);
+            Enemy.Enemy inctance = CreateGameObjectInstance(_enemyConfig.Prefab);
             inctance.OriginFactory = this;
             var scale = Vector3.one*_enemyConfig.Scale.RandomValueInRange;
             inctance.Initialise(scale,_enemyConfig.Speed.RandomValueInRange,playerTransform) ;
             return inctance;
         }
 
-        public void Reclaim(Enemy entity)
+        public void Reclaim(Enemy.Enemy entity)
         {
             Destroy(entity.gameObject);
         }
     }
+}

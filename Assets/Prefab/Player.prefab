@@ -362,8 +362,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b4531384d6053d4aa4688cd6917f590, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCommandsExecutor: {fileID: 3991158424097414025}
-  health: {fileID: 5145491533903134436}
+  _playerCommandsExecutor: {fileID: 3991158424097414025}
+  _health: {fileID: 5145491533903134436}
   uiPlayerStateDisplay: {fileID: 0}
 --- !u!114 &3828306948913431130
 MonoBehaviour:
@@ -391,7 +391,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80bd5c551ab65e46aef4db44b6a1c94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetGroup: {fileID: 0}
   playerMover: {fileID: 4276930024328713936}
   circleAttack: {fileID: 4490510120211622006}
   reflectAttack: {fileID: 829446539026726629}
@@ -458,7 +457,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  restTime: 0.1
+  restTime: 0.3
   maxDistance: 15
 --- !u!114 &973980500679033618
 MonoBehaviour:

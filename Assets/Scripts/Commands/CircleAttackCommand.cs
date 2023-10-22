@@ -1,20 +1,23 @@
-public class CircleAttackCommand: ICommand
+namespace Commands
 {
-    private CircleAttack _circleAttack;
-
-    public CircleAttackCommand(CircleAttack circleAttack)
+    public class CircleAttackCommand: ICommand
     {
-        _circleAttack = circleAttack;
-    }
-    public void Execute()
-    {
-        _circleAttack.BeginAttack();
-    }
+        private CircleAttack _circleAttack;
 
-    public void Undo()
-    {
-        _circleAttack.BeginAttack();
-    }
+        public CircleAttackCommand(CircleAttack circleAttack)
+        {
+            _circleAttack = circleAttack;
+        }
+        public void Execute()
+        {
+            _circleAttack.BeginAttack();
+        }
 
-    public bool IsFinished => _circleAttack.AttackEnded;
+        public void Undo()
+        {
+            _circleAttack.BeginAttack();
+        }
+
+        public bool IsFinished => _circleAttack.AttackEnded;
+    }
 }

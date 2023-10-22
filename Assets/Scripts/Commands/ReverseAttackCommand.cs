@@ -1,30 +1,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReverseAttackCommand : ICommand
+namespace Commands
 {
-    private Queue<Vector3> _moveToCommands;
-
-    private ICommand _lastCommand;
-    public ReverseAttackCommand(Stack<ICommand> doneCommands)
+    public class ReverseAttackCommand : ICommand
     {
-        _moveToCommands = new Queue<Vector3>();
-        ICommand command = doneCommands.Pop();
-        if(command.GetType()==typeof(MoveToCommand))
+        private Queue<Vector3> _moveToCommands;
+
+        private ICommand _lastCommand;
+        public ReverseAttackCommand(Stack<ICommand> doneCommands)
         {
-           // _moveToCommands.Enqueue(((MoveToCommand)command).);
-        }
+            _moveToCommands = new Queue<Vector3>();
+            ICommand command = doneCommands.Pop();
+            if(command.GetType()==typeof(MoveToCommand))
+            {
+                // _moveToCommands.Enqueue(((MoveToCommand)command).);
+            }
         
-    }
-    public void Execute()
-    {
-        throw new System.NotImplementedException();
-    }
+        }
+        public void Execute()
+        {
+            throw new System.NotImplementedException();
+        }
 
-    public void Undo()
-    {
-        throw new System.NotImplementedException();
-    }
+        public void Undo()
+        {
+            throw new System.NotImplementedException();
+        }
 
-    public bool IsFinished=> _lastCommand==null||_lastCommand.IsFinished;
+        public bool IsFinished=> _lastCommand==null||_lastCommand.IsFinished;
+    }
 }

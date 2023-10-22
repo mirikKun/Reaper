@@ -1,4 +1,7 @@
 
-public class AttackMarkersPool : SimpleObjectPool<AttackMarker>
+namespace Pools
 {
+    public class AttackMarkersPool : SimpleObjectPool<AttackMarker>
+    {
+    }
 }

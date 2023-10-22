@@ -1,4 +1,6 @@
-public class ReflectAttackCommand: ICommand
+namespace Commands
+{
+    public class ReflectAttackCommand: ICommand
     {
         private ReflectAttack _reflectAttack;
 
@@ -18,3 +20,4 @@ public class ReflectAttackCommand: ICommand
 
         public bool IsFinished => _reflectAttack.AttackEnded;
     }
+}

@@ -1,4 +1,8 @@
+using Enemy;
+using Factories;
+using Players;
 using UnityEngine;
+using Zenject;
 using Random = UnityEngine.Random;
 
 public class Game : MonoBehaviour
@@ -15,12 +19,19 @@ public class Game : MonoBehaviour
     private bool _focusState;
     private EnemyBehaviorCollection _enemyBehaviorCollection = new();
 
-    private void Start()
+    [Inject]
+    private void Construct(Player injectedPlayer)
     {
-        SetStartValues();
+        player = injectedPlayer;
         player.PlayerCommandsExecutor.OnCommandsReady += EnterFocusState;
         player.PlayerCommandsExecutor.OnExecutionStart += ExitFocusState;
         player.Health.OnDeath += uiGameStateSwitch.TurnOnLoseScreen;
+        player.transform.position = Vector3.zero;
+        player.Initialise();
+    }
+    private void Start()
+    {
+        SetStartValues();
     }
 
     private void OnDisable()
@@ -58,8 +69,7 @@ public class Game : MonoBehaviour
 
     public void SetStartValues()
     {
-        player.transform.position = Vector3.zero;
-        player.Initialise();
+
 
         enemyFactory.SetPlayer(player.transform);
 
