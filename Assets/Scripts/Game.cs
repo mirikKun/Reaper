@@ -2,19 +2,20 @@ using Enemy;
 using Factories;
 using Players;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 using Random = UnityEngine.Random;
 
 public class Game : MonoBehaviour
 {
-    [SerializeField] private EnemyFactory enemyFactory;
+    [SerializeField] private EnemyFactory _enemyFactory;
 
-    [SerializeField] private float rate = 4;
+    [SerializeField] private float _rate = 4;
 
-    [SerializeField] private LevelGenerator levelGenerator;
-    [SerializeField] private EnemySpawnPoint[] enemySpawnPoints;
-    [SerializeField] private Player player;
-    [SerializeField] private UIGameStateSwitch uiGameStateSwitch;
+    [SerializeField] private LevelGenerator _levelGenerator;
+    [SerializeField] private EnemySpawnPoint[] _enemySpawnPoints;
+    [SerializeField] private Player _player;
+    [SerializeField] private UIGameStateSwitch _uiGameStateSwitch;
     private float _progress;
     private bool _focusState;
     private EnemyBehaviorCollection _enemyBehaviorCollection = new();
@@ -22,13 +23,14 @@ public class Game : MonoBehaviour
     [Inject]
     private void Construct(Player injectedPlayer)
     {
-        player = injectedPlayer;
-        player.PlayerCommandsExecutor.OnCommandsReady += EnterFocusState;
-        player.PlayerCommandsExecutor.OnExecutionStart += ExitFocusState;
-        player.Health.OnDeath += uiGameStateSwitch.TurnOnLoseScreen;
-        player.transform.position = Vector3.zero;
-        player.Initialise();
+        _player = injectedPlayer;
+        _player.PlayerCommandsExecutor.OnCommandsReady += EnterFocusState;
+        _player.PlayerCommandsExecutor.OnExecutionStart += ExitFocusState;
+        _player.Health.OnDeath += _uiGameStateSwitch.TurnOnLoseScreen;
+        _player.transform.position = Vector3.zero;
+        _player.Initialise();
     }
+
     private void Start()
     {
         SetStartValues();
@@ -36,9 +38,9 @@ public class Game : MonoBehaviour
 
     private void OnDisable()
     {
-        player.PlayerCommandsExecutor.OnCommandsReady -= EnterFocusState;
-        player.PlayerCommandsExecutor.OnExecutionStart -= ExitFocusState;
-        player.Health.OnDeath -= uiGameStateSwitch.TurnOnLoseScreen;
+        _player.PlayerCommandsExecutor.OnCommandsReady -= EnterFocusState;
+        _player.PlayerCommandsExecutor.OnExecutionStart -= ExitFocusState;
+        _player.Health.OnDeath -= _uiGameStateSwitch.TurnOnLoseScreen;
     }
 
     public void SwitchFocusState()
@@ -56,34 +58,32 @@ public class Game : MonoBehaviour
     private void EnterFocusState()
     {
         _focusState = true;
-        uiGameStateSwitch.TurnOnFocusBackground();
+        _uiGameStateSwitch.TurnOnFocusBackground();
         _enemyBehaviorCollection.StopNavMeshMoving();
     }
 
     private void ExitFocusState()
     {
         _focusState = false;
-        uiGameStateSwitch.TurnOffFocusBackground();
+        _uiGameStateSwitch.TurnOffFocusBackground();
         _enemyBehaviorCollection.ContinueNavMeshMoving();
     }
 
     public void SetStartValues()
     {
+        _enemyFactory.SetPlayer(_player.transform);
 
-
-        enemyFactory.SetPlayer(player.transform);
-
-        Rect[] spawnRects = new Rect[enemySpawnPoints.Length + 1];
+        Rect[] spawnRects = new Rect[_enemySpawnPoints.Length + 1];
         spawnRects[0] = new Rect(0, 0, 5, 5);
-        for (var i = 0; i < enemySpawnPoints.Length; i++)
+        for (var i = 0; i < _enemySpawnPoints.Length; i++)
         {
-            spawnRects[i + 1] = enemySpawnPoints[i].GetSpawnRect();
+            spawnRects[i + 1] = _enemySpawnPoints[i].GetSpawnRect();
         }
 
-        levelGenerator.LevelGeneratorSetup(spawnRects);
+        _levelGenerator.LevelGeneratorSetup(spawnRects);
 
         ClearBehaviors();
-        uiGameStateSwitch.TurnOffLoseScreen();
+        _uiGameStateSwitch.TurnOffLoseScreen();
     }
 
 
@@ -100,12 +100,11 @@ public class Game : MonoBehaviour
             return;
         }
 
-        _progress += rate * Time.deltaTime;
+        _progress += _rate * Time.deltaTime;
         while (_progress >= 1)
         {
-
-            Vector3 newPosition = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].GetRandomSpawnPosition();
-            var enemy = enemyFactory.GetEnemy();
+            Vector3 newPosition = _enemySpawnPoints[Random.Range(0, _enemySpawnPoints.Length)].GetRandomSpawnPosition();
+            var enemy = _enemyFactory.GetEnemy();
             enemy.transform.position = newPosition;
             _enemyBehaviorCollection.Add(enemy);
             _progress--;

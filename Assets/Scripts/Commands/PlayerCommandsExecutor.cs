@@ -4,24 +4,25 @@ using Cinemachine;
 using Players;
 using Pools;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace Commands
 {
     public class PlayerCommandsExecutor : MonoBehaviour
     {
-        [SerializeField] private PlayerMover playerMover;
-        [SerializeField] private CircleAttack circleAttack;
-        [SerializeField] private ReflectAttack reflectAttack;
+        [SerializeField] private PlayerMover _playerMover;
+        [SerializeField] private CircleAttack _circleAttack;
+        [SerializeField] private ReflectAttack _reflectAttack;
 
-        [SerializeField] private DestinationsPool destinationPool;
-        [SerializeField] private AttackMarkersPool circleAttackPool;
-        [SerializeField] private AttackMarkersPool reflectAttackPool;
-        [SerializeField] private AttackMarker revertAttackMarker;
-        [SerializeField] private int maxCommandCount = 5;
+        [SerializeField] private DestinationsPool _destinationPool;
+        [SerializeField] private AttackMarkersPool _circleAttackPool;
+        [SerializeField] private AttackMarkersPool _reflectAttackPool;
+        [SerializeField] private AttackMarker _revertAttackMarker;
+        [SerializeField] private int _maxCommandCount = 5;
 
-        [SerializeField] private float commandReductionSpeed = 0.3f;
-        private float reductionProgress;
+        [SerializeField] private float _commandReductionSpeed = 0.3f;
+        private float _reductionProgress;
         private const int ObstacleLayer = 1 << 9;
 
         public event Action OnExecutionStart;
@@ -35,18 +36,17 @@ namespace Commands
         private Stack<ICommand> _undoCommands = new Stack<ICommand>();
 
         private ICommand _currentCommand;
+        private IGameInput _gameInput;
         public Vector3 _lastPos;
         public Vector3 _startPos;
         private bool _isExecuting = false;
         private int _currentCommandCount;
 
         [Inject]
-        public void Construct(PlayerMarkers playerMarkers)
+        public void Construct(PlayerMarkers playerMarkers, IGameInput gameInput)
         {
-            destinationPool = playerMarkers.DestinationsPool;
-            circleAttackPool = playerMarkers.CircleAttackMarkersPool;
-            reflectAttackPool = playerMarkers.ReflectMarkersPool;
-            revertAttackMarker = playerMarkers.ReverseAttackMarkersPool;
+            ConstructMarkers(playerMarkers);
+            ConstructInputs(gameInput);
         }
 
         private void Start()
@@ -60,40 +60,70 @@ namespace Commands
             {
                 ProcessCommands();
             }
-            else if (_currentCommandCount == 0 && reductionProgress < maxCommandCount)
+            else if (_currentCommandCount == 0 && _reductionProgress < _maxCommandCount)
             {
-                ChangeReductionProgress(Time.deltaTime * commandReductionSpeed);
-                OnCommandProgressReduction?.Invoke(reductionProgress / maxCommandCount);
-                if (reductionProgress >= maxCommandCount)
+                ChangeReductionProgress(Time.deltaTime * _commandReductionSpeed);
+                OnCommandProgressReduction?.Invoke(_reductionProgress / _maxCommandCount);
+                if (_reductionProgress >= _maxCommandCount)
                 {
                     OnCommandsReady?.Invoke();
                 }
             }
         }
 
+        private void OnDestroy()
+        {
+            _gameInput.OnExecutionClick -= StartExecuting;
+            _gameInput.OnAreaClick -= AddMoveToCommand;
+            _gameInput.OnCircleAttackClick -= AddCircleAttackCommand;
+            _gameInput.OnReflectAttackClick -= AddReflectAttackCommand;
+            _gameInput.OnReverseAttackClick -= AddReverseAttackCommand;
+        }
+
         public void SetStartValues()
         {
-            playerMover.FastMoving = false;
+            _playerMover.FastMoving = false;
+            _isExecuting = false;
 
             _currentCommandCount = 0;
-
             _todoCommands.Clear();
             _undoCommands.Clear();
-            destinationPool.RevertAllToPool();
-            circleAttackPool.RevertAllToPool();
-            reflectAttackPool.RevertAllToPool();
-            _isExecuting = false;
-            _lastPos = playerMover.GetPos();
+
+            _destinationPool.RevertAllToPool();
+            _circleAttackPool.RevertAllToPool();
+            _reflectAttackPool.RevertAllToPool();
+
+            _lastPos = _playerMover.GetPos();
             _lastPos = new Vector3(_lastPos.x, 0.2f, _lastPos.z);
-            destinationPool.SetupPool(maxCommandCount);
-            circleAttackPool.SetupPool(maxCommandCount);
-            reflectAttackPool.SetupPool(maxCommandCount);
-            reductionProgress = maxCommandCount;
+
+            _destinationPool.SetupPool(_maxCommandCount);
+            _circleAttackPool.SetupPool(_maxCommandCount);
+            _reflectAttackPool.SetupPool(_maxCommandCount);
+
+            _reductionProgress = _maxCommandCount;
+        }
+
+        private void ConstructInputs(IGameInput gameInput)
+        {
+            _gameInput = gameInput;
+            _gameInput.OnExecutionClick += StartExecuting;
+            _gameInput.OnAreaClick += AddMoveToCommand;
+            _gameInput.OnCircleAttackClick += AddCircleAttackCommand;
+            _gameInput.OnReflectAttackClick += AddReflectAttackCommand;
+            _gameInput.OnReverseAttackClick += AddReverseAttackCommand;
+        }
+
+        private void ConstructMarkers(PlayerMarkers playerMarkers)
+        {
+            _destinationPool = playerMarkers.DestinationsPool;
+            _circleAttackPool = playerMarkers.CircleAttackMarkersPool;
+            _reflectAttackPool = playerMarkers.ReflectMarkersPool;
+            _revertAttackMarker = playerMarkers.ReverseAttackMarkersPool;
         }
 
         private bool CanAddNewCommand()
         {
-            return (_currentCommandCount < maxCommandCount && !(reductionProgress < maxCommandCount));
+            return (_currentCommandCount < _maxCommandCount && !(_reductionProgress < _maxCommandCount));
         }
 
         public void AddMoveToCommand(Vector3 pos)
@@ -104,11 +134,11 @@ namespace Commands
             }
 
             pos = CalculatePossiblePosition(new Ray(_lastPos, pos - _lastPos), pos);
-            var destination = destinationPool.GetElement();
+            var destination = _destinationPool.GetElement();
             destination.PlaceDestination(_lastPos, pos);
             OnMoveCommandAdding?.Invoke(destination.transform);
 
-            AddCommand(new MoveToCommand(playerMover, _lastPos, pos));
+            AddCommand(new MoveToCommand(_playerMover, _lastPos, pos));
             _lastPos = pos;
         }
 
@@ -119,8 +149,8 @@ namespace Commands
                 return;
             }
 
-            circleAttackPool.GetElement().SetPosition(_lastPos);
-            AddCommand(new CircleAttackCommand(circleAttack));
+            _circleAttackPool.GetElement().SetPosition(_lastPos);
+            AddCommand(new CircleAttackCommand(_circleAttack));
         }
 
         public void AddReflectAttackCommand()
@@ -130,8 +160,8 @@ namespace Commands
                 return;
             }
 
-            reflectAttackPool.GetElement().SetPosition(_lastPos);
-            AddCommand(new ReflectAttackCommand(reflectAttack));
+            _reflectAttackPool.GetElement().SetPosition(_lastPos);
+            AddCommand(new ReflectAttackCommand(_reflectAttack));
         }
 
         public void AddReverseAttackCommand()
@@ -141,14 +171,14 @@ namespace Commands
                 return;
             }
 
-            revertAttackMarker.gameObject.SetActive(true);
-            revertAttackMarker.SetPosition(_lastPos);
+            _revertAttackMarker.gameObject.SetActive(true);
+            _revertAttackMarker.SetPosition(_lastPos);
             ICommand[] commands = _todoCommands.ToArray();
             Array.Reverse(commands);
-            _todoCommands.Enqueue(new ChangeSpeedCommand(playerMover));
+            _todoCommands.Enqueue(new ChangeSpeedCommand(_playerMover));
 
             AddCommandsQueue(commands);
-            _todoCommands.Enqueue(new ChangeSpeedCommand(playerMover));
+            _todoCommands.Enqueue(new ChangeSpeedCommand(_playerMover));
             _lastPos = _startPos;
             StartExecuting();
         }
@@ -164,34 +194,34 @@ namespace Commands
                 }
             }
 
-            OnCommandAdding?.Invoke(maxCommandCount - _currentCommandCount);
+            OnCommandAdding?.Invoke(_maxCommandCount - _currentCommandCount);
         }
 
         private void AddCommand(ICommand command)
         {
             _todoCommands.Enqueue(command);
             _currentCommandCount++;
-            OnCommandAdding?.Invoke(maxCommandCount - _currentCommandCount);
+            OnCommandAdding?.Invoke(_maxCommandCount - _currentCommandCount);
         }
 
         private void ChangeReductionProgress(float change)
         {
-            reductionProgress += change;
-            reductionProgress = Mathf.Clamp(reductionProgress, 0, maxCommandCount);
+            _reductionProgress += change;
+            _reductionProgress = Mathf.Clamp(_reductionProgress, 0, _maxCommandCount);
         }
 
         public Vector3 CalculatePossiblePosition(Ray ray, Vector3 newPos)
         {
             RaycastHit hit;
             Vector3 pos = newPos;
-            if (Physics.Raycast(ray, out hit, playerMover.MaxDistance, ObstacleLayer))
+            if (Physics.Raycast(ray, out hit, _playerMover.MaxDistance, ObstacleLayer))
             {
                 pos = hit.point;
             }
-            else if ((_lastPos - newPos).magnitude > playerMover.MaxDistance)
+            else if ((_lastPos - newPos).magnitude > _playerMover.MaxDistance)
             {
                 Vector3 vector = _lastPos - newPos;
-                var factor = playerMover.MaxDistance / vector.magnitude;
+                var factor = _playerMover.MaxDistance / vector.magnitude;
                 pos = new Vector3(_lastPos.x - vector.x * factor, newPos.y,
                     _lastPos.z - vector.z * factor);
             }
@@ -228,14 +258,14 @@ namespace Commands
         {
             _startPos = _lastPos;
             _currentCommandCount = 0;
-            playerMover.FastMoving = false;
+            _playerMover.FastMoving = false;
 
             _isExecuting = false;
 
-            destinationPool.RevertAllToPool();
-            circleAttackPool.RevertAllToPool();
-            reflectAttackPool.RevertAllToPool();
-            revertAttackMarker.gameObject.SetActive(false);
+            _destinationPool.RevertAllToPool();
+            _circleAttackPool.RevertAllToPool();
+            _reflectAttackPool.RevertAllToPool();
+            _revertAttackMarker.gameObject.SetActive(false);
 
             OnExecutionEnd?.Invoke();
         }

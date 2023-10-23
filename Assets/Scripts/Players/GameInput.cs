@@ -1,19 +1,33 @@
 using System;
 using Commands;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Players
 {
-    public class GameInput : MonoBehaviour
+    public class GameInput : MonoBehaviour, IGameInput
     {
-        [SerializeField] private PlayerCommandsExecutor playerCommandsExecutor;
-         private Camera camera;
+        [SerializeField] private PlayerCommandsExecutor _playerCommandsExecutor;
+        [SerializeField] private Button _circleAttackButton;
+        [SerializeField] private Button _reflectAttackButton;
+        [SerializeField] private Button _reverseAttackButton;
+
+        public event Action<Vector3> OnAreaClick;
+        public event Action OnExecutionClick;
+        public event Action OnCircleAttackClick;
+        public event Action OnReflectAttackClick;
+        public event Action OnReverseAttackClick;
+
+        private Camera camera;
 
         private Ray _touchRay => camera.ScreenPointToRay(Input.mousePosition);
 
         private void Start()
         {
-            camera=Camera.main;
+            camera = Camera.main;
+            _circleAttackButton.onClick.AddListener(UseCircleAttack);
+            _reflectAttackButton.onClick.AddListener(UseReflectAttack);
+            _reverseAttackButton.onClick.AddListener(UseReverseAttack);
         }
 
         private void Update()
@@ -22,15 +36,17 @@ namespace Players
             {
                 bool isOverUI = UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
 
-                if (Physics.Raycast(_touchRay, float.MaxValue, 1)&&!isOverUI)
+                if (Physics.Raycast(_touchRay, float.MaxValue, 1) && !isOverUI)
                 {
-                    playerCommandsExecutor.AddMoveToCommand(GetVerticalRayPosition(_touchRay));
+                    Vector3 position = GetVerticalRayPosition(_touchRay);
+                    OnAreaClick?.Invoke(position);
+                    // playerCommandsExecutor.AddMoveToCommand(GetVerticalRayPosition(_touchRay));
                 }
             }
 
             if (Input.GetButtonDown("Fire2"))
             {
-                playerCommandsExecutor.StartExecuting();
+                OnExecutionClick?.Invoke();
             }
         }
 
@@ -47,6 +63,21 @@ namespace Players
             }
 
             return pos;
+        }
+
+        private void UseReverseAttack()
+        {
+            OnReverseAttackClick?.Invoke();
+        }
+
+        private void UseReflectAttack()
+        {
+            OnReflectAttackClick?.Invoke();
+        }
+
+        private void UseCircleAttack()
+        {
+            OnCircleAttackClick?.Invoke();
         }
     }
 }
