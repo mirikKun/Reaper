@@ -61,11 +61,7 @@ namespace Commands
             else if (_currentCommandCount == 0 && _reductionProgress < _maxCommandCount)
             {
                 ChangeReductionProgress(Time.deltaTime * _commandReductionSpeed);
-                OnCommandProgressReduction?.Invoke(_reductionProgress / _maxCommandCount);
-                if (_reductionProgress >= _maxCommandCount)
-                {
-                    OnCommandsReady?.Invoke();
-                }
+                ReductionEventsInvoking();
             }
         }
 
@@ -266,6 +262,15 @@ namespace Commands
             _revertAttackMarker.gameObject.SetActive(false);
 
             OnExecutionEnd?.Invoke();
+        }
+
+        private void ReductionEventsInvoking()
+        {
+            OnCommandProgressReduction?.Invoke(_reductionProgress / _maxCommandCount);
+            if (_reductionProgress >= _maxCommandCount)
+            {
+                OnCommandsReady?.Invoke();
+            }
         }
 
 
