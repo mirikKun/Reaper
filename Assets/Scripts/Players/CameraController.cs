@@ -1,7 +1,6 @@
 using Cinemachine;
 using Commands;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace Players

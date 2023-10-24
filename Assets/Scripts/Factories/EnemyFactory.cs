@@ -15,17 +15,17 @@ namespace Factories
             [FloatRangeSlider(0.3f, 10f)] public FloatRange Speed = new FloatRange(3f);
         }
 
-        private Transform playerTransform;
+        private Transform _playerTransform;
         public void SetPlayer(Transform player)
         {
-            playerTransform = player;
+            _playerTransform = player;
         }
         public Enemy.Enemy GetEnemy()
         {
             Enemy.Enemy inctance = CreateGameObjectInstance(_enemyConfig.Prefab);
             inctance.OriginFactory = this;
             var scale = Vector3.one*_enemyConfig.Scale.RandomValueInRange;
-            inctance.Initialise(scale,_enemyConfig.Speed.RandomValueInRange,playerTransform) ;
+            inctance.Initialise(scale,_enemyConfig.Speed.RandomValueInRange,_playerTransform) ;
             return inctance;
         }
 

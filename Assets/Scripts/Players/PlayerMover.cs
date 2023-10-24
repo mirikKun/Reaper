@@ -4,14 +4,14 @@ namespace Players
 {
     public class PlayerMover : MonoBehaviour
     {
-        [SerializeField] private float speed;
+         [SerializeField] private float _speed=26;
         [SerializeField] private AnimationCurve speedCurve;
-        [SerializeField] private float restTime = 0.5f;
-        [SerializeField] private float maxDistance = 10;
+         [SerializeField] private float _restTime = 0.3f;
+         [SerializeField] private float _maxDistance = 15;
         private Vector3 _previousPosition;
         private Vector3 _newPosition;
         public PlayerState State => _state;
-        public float MaxDistance => maxDistance;
+        public float MaxDistance => _maxDistance;
         private float _stateProgress = 0;
         private float _progressFactor = 0;
         private Transform _transform;
@@ -30,7 +30,7 @@ namespace Players
 
 
             _stateProgress = 0;
-            _progressFactor = speed / Vector3.Distance(_previousPosition, _newPosition);
+            _progressFactor = _speed / Vector3.Distance(_previousPosition, _newPosition);
 
             _state = PlayerState.Moving;
         }
@@ -39,7 +39,7 @@ namespace Players
         public void StartResting()
         {
             _stateProgress = 0;
-            _progressFactor = 1 / restTime;
+            _progressFactor = 1 / _restTime;
             _state = PlayerState.Rest;
         }
 
@@ -94,7 +94,7 @@ namespace Players
             Gizmos.color = Color.red;
             Vector3 position = transform.position;
             position.y += 0.01f;
-            Gizmos.DrawWireSphere(position, maxDistance);
+            Gizmos.DrawWireSphere(position, _maxDistance);
         }
     }
 

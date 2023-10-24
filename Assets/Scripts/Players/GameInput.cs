@@ -1,5 +1,4 @@
 using System;
-using Commands;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +6,6 @@ namespace Players
 {
     public class GameInput : MonoBehaviour, IGameInput
     {
-        [SerializeField] private PlayerCommandsExecutor _playerCommandsExecutor;
         [SerializeField] private Button _circleAttackButton;
         [SerializeField] private Button _reflectAttackButton;
         [SerializeField] private Button _reverseAttackButton;

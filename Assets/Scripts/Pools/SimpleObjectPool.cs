@@ -5,9 +5,9 @@ namespace Pools
 {
     public class SimpleObjectPool<T>:MonoBehaviour  where T : MonoBehaviour
     {
-        [SerializeField] private T prefab;
+        [SerializeField] private T _prefab;
 
-        private T elementPrefab ;
+        private T _elementPrefab ;
 
         private int _initialPoolSize = 3;
 
@@ -21,13 +21,13 @@ namespace Pools
 
         private void GenerateNewElement()
         {
-            T newElements = Instantiate(prefab, transform);
+            T newElements = Instantiate(_prefab, transform);
             newElements.gameObject.SetActive(false);
             _elements.Add(newElements);
         }
 
         public void SetupPool(int maxCount)
-        {   if (prefab == null)
+        {   if (_prefab == null)
             {
                 Debug.LogError("Need a reference to the destination prefab");
             }

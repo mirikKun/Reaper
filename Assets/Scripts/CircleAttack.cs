@@ -1,20 +1,21 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CircleAttack : MonoBehaviour
 {
-    [SerializeField] private float preAttackTime = 0.3f;
-    [SerializeField] private float attackTime = 0.5f;
-    [SerializeField] private float postAttackTime = 0.3f;
-    [SerializeField] private Transform attackEffect;
-    [SerializeField] private float effectSpeed=10;
+    [SerializeField] private float _preAttackTime = 0.3f;
+    [SerializeField] private float _attackTime = 0.5f;
+    [SerializeField] private float _postAttackTime = 0.3f;
+    [SerializeField] private Transform _attackEffect;
+    [SerializeField] private float _effectSpeed = 10;
 
-    [SerializeField] private int damage=1;
-    [SerializeField] private float radius=5;
-    private const int ENEMY_LAYER_MASK = 1 << 10;
+    [SerializeField] private int _damage = 1;
+    [SerializeField] private float _radius = 6;
+    private const int EnemyLayerMask = 1 << 10;
 
     private float _progress;
-    public bool AttackEnded { get;private set; }
+    public bool AttackEnded { get; private set; }
 
     public void BeginAttack()
     {
@@ -25,30 +26,31 @@ public class CircleAttack : MonoBehaviour
 
     private IEnumerator Attacking()
     {
-        yield return new WaitForSeconds(preAttackTime);
+        yield return new WaitForSeconds(_preAttackTime);
 
-        attackEffect.gameObject.SetActive(true);
-        attackEffect.localScale = Vector3.one * (radius * 2);
+        _attackEffect.gameObject.SetActive(true);
+        _attackEffect.localScale = Vector3.one * (_radius * 2);
         DoDamage();
-        while (_progress<attackTime)
+        while (_progress < _attackTime)
         {
-            attackEffect.Rotate(Vector3.up,attackEffect.transform.eulerAngles.y+Time.deltaTime*effectSpeed);
+            _attackEffect.Rotate(Vector3.up, _attackEffect.transform.eulerAngles.y + Time.deltaTime * _effectSpeed);
             _progress += Time.deltaTime;
             yield return null;
         }
-        attackEffect.gameObject.SetActive(false);
 
-        yield return new WaitForSeconds(postAttackTime);
+        _attackEffect.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(_postAttackTime);
         AttackEnded = true;
     }
 
     private void DoDamage()
     {
         Collider[] buffer = new Collider[100];
-        int bufferedCount = Physics.OverlapSphereNonAlloc(transform.position, radius, buffer, ENEMY_LAYER_MASK);
+        int bufferedCount = Physics.OverlapSphereNonAlloc(transform.position, _radius, buffer, EnemyLayerMask);
         for (int i = 0; i < bufferedCount; i++)
         {
-            buffer[i].GetComponent<IDamageable>().TakeDamage(damage);
+            buffer[i].GetComponent<IDamageable>().TakeDamage(_damage);
         }
     }
 }

@@ -364,7 +364,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerCommandsExecutor: {fileID: 3991158424097414025}
   _health: {fileID: 5145491533903134436}
-  uiPlayerStateDisplay: {fileID: 0}
 --- !u!114 &3828306948913431130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,8 +376,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 067c8d5e4b312e14cba84cbf903c1abf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCommandsExecutor: {fileID: 3991158424097414025}
-  camera: {fileID: 0}
+  _circleAttackButton: {fileID: 0}
+  _reflectAttackButton: {fileID: 0}
+  _reverseAttackButton: {fileID: 0}
 --- !u!114 &3991158424097414025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -391,15 +391,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80bd5c551ab65e46aef4db44b6a1c94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerMover: {fileID: 4276930024328713936}
-  circleAttack: {fileID: 4490510120211622006}
-  reflectAttack: {fileID: 829446539026726629}
-  destinationPool: {fileID: 0}
-  circleAttackPool: {fileID: 0}
-  reflectAttackPool: {fileID: 0}
-  revertAttackMarker: {fileID: 0}
-  maxCommandCount: 5
-  commandReductionSpeed: 3
+  _playerMover: {fileID: 4276930024328713936}
+  _circleAttack: {fileID: 4490510120211622006}
+  _reflectAttack: {fileID: 829446539026726629}
+  _maxCommandCount: 5
+  _commandReductionSpeed: 0.3
   _lastPos: {x: 0, y: 0, z: 0}
   _startPos: {x: 0, y: 0, z: 0}
 --- !u!114 &4276930024328713936
@@ -414,7 +410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15ccad4bb8468e34ebb70d693576b5d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 26
+  _speed: 26
   speedCurve:
     serializedVersion: 2
     m_Curve:
@@ -457,8 +453,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  restTime: 0.3
-  maxDistance: 15
+  _restTime: 0.3
+  _maxDistance: 15
 --- !u!114 &973980500679033618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -483,8 +479,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 642177c32e99459d8a1735439234523e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHealth: 3
-  maxHealth: 25
+  _currentHealth: 0
+  _maxHealth: 1
   <IsInvincible>k__BackingField: 0
 --- !u!114 &4490510120211622006
 MonoBehaviour:
@@ -498,13 +494,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b28cf1aa27c254182bbef38b33fe27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  preAttackTime: 0.3
-  attackTime: 0.5
-  postAttackTime: 0.3
-  attackEffect: {fileID: 7927611384089174890}
-  effectSpeed: 10
-  damage: 1
-  radius: 6
+  _preAttackTime: 0.3
+  _attackTime: 0.5
+  _postAttackTime: 0.3
+  _attackEffect: {fileID: 7927611384089174890}
+  _effectSpeed: 10
+  _damage: 1
+  _radius: 6
 --- !u!114 &829446539026726629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -517,14 +513,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f31cc909a0c0b454b9cbecd2366a4594, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxWaitingTime: 3
-  attackSpeed: 5
-  postAttackTime: 0.3
-  attackEffect: {fileID: 671045167329562983}
-  checkRadius: 2
-  damage: 1
-  attackRadius: 3
-  attackLenght: 5
+  _maxWaitingTime: 3
+  _attackSpeed: 5
+  _postAttackTime: 0.3
+  _attackEffect: {fileID: 8988097698939308059}
+  _checkRadius: 2
+  _damage: 1
+  _attackRadius: 3
+  _attackLenght: 5
 --- !u!1 &6016150898779647076
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,25 +5,25 @@ namespace Commands
     public class ChangeSpeedCommand : ICommand
 
     {
-        protected PlayerMover _playerMover;
+        protected PlayerMover playerMover;
 
 
 
         public ChangeSpeedCommand(PlayerMover playerMover)
         {
-            _playerMover = playerMover;
+            this.playerMover = playerMover;
         }
 
 
         public void Execute()
         {
-            _playerMover.FastMoving=!_playerMover.FastMoving;
+            playerMover.FastMoving=!playerMover.FastMoving;
         }
 
 
         public void Undo()
         {
-            _playerMover.FastMoving=!_playerMover.FastMoving;
+            playerMover.FastMoving=!playerMover.FastMoving;
         }
     
 

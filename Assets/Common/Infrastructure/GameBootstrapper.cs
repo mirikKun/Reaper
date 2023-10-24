@@ -1,7 +1,6 @@
 ﻿using CodeBase.Logic;
 using Common.Infrastructure.States;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Common.Infrastructure
 {

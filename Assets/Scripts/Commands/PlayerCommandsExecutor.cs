@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Cinemachine;
 using Players;
 using Pools;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace Commands
@@ -14,14 +12,14 @@ namespace Commands
         [SerializeField] private PlayerMover _playerMover;
         [SerializeField] private CircleAttack _circleAttack;
         [SerializeField] private ReflectAttack _reflectAttack;
-
-        [SerializeField] private DestinationsPool _destinationPool;
-        [SerializeField] private AttackMarkersPool _circleAttackPool;
-        [SerializeField] private AttackMarkersPool _reflectAttackPool;
-        [SerializeField] private AttackMarker _revertAttackMarker;
         [SerializeField] private int _maxCommandCount = 5;
 
-        [SerializeField] private float _commandReductionSpeed = 0.3f;
+        private DestinationsPool _destinationPool;
+        private AttackMarkersPool _circleAttackPool;
+         private AttackMarkersPool _reflectAttackPool;
+         private AttackMarker _revertAttackMarker;
+
+         [SerializeField] private float _commandReductionSpeed = 0.3f;
         private float _reductionProgress;
         private const int ObstacleLayer = 1 << 9;
 

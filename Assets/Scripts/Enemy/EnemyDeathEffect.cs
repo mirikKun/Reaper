@@ -4,8 +4,8 @@ namespace Enemy
 {
     public class EnemyDeathEffect:MonoBehaviour
     {
-        [SerializeField] private ParticleSystem deathParticle;
-        [SerializeField] private float destroyAfter=2;
+         [SerializeField] private ParticleSystem _deathParticle;
+         [SerializeField] private float _destroyAfter=2;
         private IDamageable _damageable;
 
         public void Initialise(IDamageable damageable)
@@ -16,9 +16,9 @@ namespace Enemy
 
         public void Death()
         {
-            deathParticle.transform.SetParent(transform.parent);
-            deathParticle.Play();
-            Destroy(deathParticle.gameObject,destroyAfter);
+            _deathParticle.transform.SetParent(transform.parent);
+            _deathParticle.Play();
+            Destroy(_deathParticle.gameObject,_destroyAfter);
         }
     }
 }

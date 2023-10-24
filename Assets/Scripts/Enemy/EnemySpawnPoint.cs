@@ -6,12 +6,12 @@ namespace Enemy
     [SelectionBase]
     public class EnemySpawnPoint : MonoBehaviour
     {
-        [SerializeField] private Transform model;
+        [SerializeField] private Transform _model;
         private Rect _rect;
         public Rect GetSpawnRect()
         {
             Vector3 pos = transform.position;
-            Vector3 scale = model.localScale;
+            Vector3 scale = _model.localScale;
             _rect.Set(pos.x - scale.x / 2, pos.z - scale.z / 2, scale.x, scale.z);
             return _rect;
         }

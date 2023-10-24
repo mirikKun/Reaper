@@ -2,7 +2,6 @@ using Enemy;
 using Factories;
 using Players;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 using Random = UnityEngine.Random;
 
@@ -14,8 +13,8 @@ public class Game : MonoBehaviour
 
     [SerializeField] private LevelGenerator _levelGenerator;
     [SerializeField] private EnemySpawnPoint[] _enemySpawnPoints;
-    [SerializeField] private Player _player;
     [SerializeField] private UIGameStateSwitch _uiGameStateSwitch;
+    private Player _player;
     private float _progress;
     private bool _focusState;
     private EnemyBehaviorCollection _enemyBehaviorCollection = new();

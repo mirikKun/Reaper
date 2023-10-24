@@ -1,12 +1,13 @@
 using Factories;
 using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class LevelGenerator : MonoBehaviour
 {
-    [SerializeField] private int count=20;
-    [SerializeField] private float areaSize = 50;
+    [SerializeField] private int _count=45;
+    [SerializeField] private float _areaSize = 50;
     [SerializeField] private ObstaclesFactory obstaclesFactory;
     [SerializeField] private NavMeshSurface navMeshSurface;
 
@@ -34,10 +35,10 @@ public class LevelGenerator : MonoBehaviour
     private void GeneratePillars( Rect[] spawnRects)
     {
         Random.InitState(1);
-        _pillars = new Pillar[count];
-        for (int i = 0; i < count; i++)
+        _pillars = new Pillar[_count];
+        for (int i = 0; i < _count; i++)
         {
-            Vector3 newPos = new Vector3(Random.Range(-areaSize, areaSize), 0, Random.Range(-areaSize, areaSize));
+            Vector3 newPos = new Vector3(Random.Range(-_areaSize, _areaSize), 0, Random.Range(-_areaSize, _areaSize));
             if (newPos.InsideRects(spawnRects,obstaclesFactory.MaxScale/2))
             {
                 i--;

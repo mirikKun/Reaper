@@ -11,7 +11,7 @@ namespace Enemy
         typeof(EnemyDeathEffect))]
     public class Enemy : GameBehavior
     {
-        [SerializeField] private Transform model;
+         [SerializeField] private Transform _model;
 
         public EnemyFactory OriginFactory { get; set; }
         private Transform _destination;
@@ -20,7 +20,7 @@ namespace Enemy
         private EnemyDeathEffect _enemyDeathEffect;
         private float _speed;
         private bool _started;
-        private bool dead;
+        private bool _dead;
 
         public void Initialise(Vector3 scale, float speed, Transform destination)
         {
@@ -29,7 +29,7 @@ namespace Enemy
             _health = GetComponent<Health>();
             _enemyDeathEffect = GetComponent<EnemyDeathEffect>();
 
-            model.localScale = scale;
+            _model.localScale = scale;
             _destination = destination;
             _navMeshAgent.speed = speed;
 
@@ -43,14 +43,14 @@ namespace Enemy
 
         public override void Recycle()
         {
-            dead = true;
+            _dead = true;
             OriginFactory.Reclaim(this);
         }
 
         public override bool GameUpdate()
         {
         
-            if (dead)
+            if (_dead)
                 return false;
             if(_started)
             {
@@ -61,14 +61,14 @@ namespace Enemy
 
         public override void Stop()
         {
-            if (dead)
+            if (_dead)
                 return ;
             _navMeshAgent.speed = 0;
         }
 
         public override void Continue()
         {
-            if (dead)
+            if (_dead)
                 return ;
             _navMeshAgent.speed = _speed;
         }
