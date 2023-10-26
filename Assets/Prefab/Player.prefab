@@ -267,7 +267,6 @@ GameObject:
   - component: {fileID: 9131375286038257121}
   - component: {fileID: 2150625379900749802}
   - component: {fileID: 2856097575327245270}
-  - component: {fileID: 3828306948913431130}
   - component: {fileID: 3991158424097414025}
   - component: {fileID: 4276930024328713936}
   - component: {fileID: 973980500679033618}
@@ -364,21 +363,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerCommandsExecutor: {fileID: 3991158424097414025}
   _health: {fileID: 5145491533903134436}
---- !u!114 &3828306948913431130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4374836379232047722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 067c8d5e4b312e14cba84cbf903c1abf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _circleAttackButton: {fileID: 0}
-  _reflectAttackButton: {fileID: 0}
-  _reverseAttackButton: {fileID: 0}
 --- !u!114 &3991158424097414025
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -742,7 +742,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 335588527}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.47378802, y: -0.000000015152608, z: 0.000000008152178, w: 0.88063896}
+  m_LocalRotation: {x: 0.47378802, y: 0.000000015152612, z: -0.000000008152179, w: 0.88063896}
   m_LocalPosition: {x: 0, y: 22, z: -18.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1437,14 +1437,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyFactory: {fileID: 11400000, guid: 3a94af7ebdaaf1d4cbff891ccdd89d8d, type: 2}
-  _rate: 4
+  _rate: 0
   _levelGenerator: {fileID: 1495413393}
   _enemySpawnPoints:
   - {fileID: 2013851856}
   - {fileID: 585062184}
   - {fileID: 1147050084}
   - {fileID: 1029184165}
-  _uiGameStateSwitch: {fileID: 1724344197}
 --- !u!1 &730260953
 GameObject:
   m_ObjectHideFlags: 0
@@ -1457,6 +1456,7 @@ GameObject:
   - component: {fileID: 730260957}
   - component: {fileID: 730260956}
   - component: {fileID: 730260955}
+  - component: {fileID: 730260958}
   m_Layer: 5
   m_Name: ReverseHit
   m_TagString: Untagged
@@ -1527,19 +1527,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 730260956}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlayerCommandsExecutor, Assembly-CSharp
-        m_MethodName: AddReverseAttackCommand
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &730260956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1578,6 +1566,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 730260953}
   m_CullTransparentMesh: 1
+--- !u!114 &730260958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730260953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 995f34434fbe45d46aacf4e120446279, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button:
+    m_key: ReverseAttack
+    value: 0
 --- !u!1 &733622316
 GameObject:
   m_ObjectHideFlags: 0
@@ -1673,6 +1676,7 @@ GameObject:
   - component: {fileID: 861014877}
   - component: {fileID: 861014876}
   - component: {fileID: 861014875}
+  - component: {fileID: 861014878}
   m_Layer: 5
   m_Name: StartMove
   m_TagString: Untagged
@@ -1782,6 +1786,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 861014873}
   m_CullTransparentMesh: 1
+--- !u!114 &861014878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861014873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 995f34434fbe45d46aacf4e120446279, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button:
+    m_key: Execute
+    value: 0
 --- !u!1 &883818580
 GameObject:
   m_ObjectHideFlags: 0
@@ -2139,7 +2158,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.47378802, y: -0.000000015152608, z: 0.000000008152178, w: 0.88063896}
+  m_LocalRotation: {x: 0.47378802, y: 0.000000015152612, z: -0.000000008152179, w: 0.88063896}
   m_LocalPosition: {x: 0, y: 22, z: -18.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2948,6 +2967,7 @@ GameObject:
   - component: {fileID: 1324205938}
   - component: {fileID: 1324205937}
   - component: {fileID: 1324205936}
+  - component: {fileID: 1324205939}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -2968,9 +2988,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _startPoint: {fileID: 1971879995}
-  _heroPrefab: {fileID: 2670545232681529828, guid: 34c0fe42c09c1f74ea32c420679f027f, type: 3}
+  _heroPrefab: {fileID: 2856097575327245270, guid: 34c0fe42c09c1f74ea32c420679f027f, type: 3}
   _playerMarkers: {fileID: 775610270}
-  _playerStateDisplay: {fileID: 1724344198}
+  _playerStateDisplay: {fileID: 1367014473}
 --- !u!114 &1324205937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2985,6 +3005,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
   _monoInstallers:
+  - {fileID: 1324205939}
   - {fileID: 1324205936}
   _installerPrefabs: []
   _autoRun: 1
@@ -3018,6 +3039,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1324205939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1324205935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 722484f912d34093afc07335bc33b21a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mediator: {fileID: 1367014474}
 --- !u!1 &1367014466
 GameObject:
   m_ObjectHideFlags: 0
@@ -3030,6 +3064,10 @@ GameObject:
   - component: {fileID: 1367014469}
   - component: {fileID: 1367014468}
   - component: {fileID: 1367014467}
+  - component: {fileID: 1367014474}
+  - component: {fileID: 1367014473}
+  - component: {fileID: 1367014472}
+  - component: {fileID: 1367014471}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3120,6 +3158,70 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1367014471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367014466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7d6bb3108f0439e86dad8b53a64c206, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _loseScreen: {fileID: 1551721108}
+--- !u!114 &1367014472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367014466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4fde34d7066db34cbdb90f7aa45d69f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _focusBackground: {fileID: 1177343714}
+  _switchButton: {fileID: 1561064338}
+--- !u!114 &1367014473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367014466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ce03e8b3dfa451499a133e8eca6846b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _healthBar: {fileID: 2139684169}
+  _actionPoints:
+  - {fileID: 1849563731}
+  - {fileID: 2091910053}
+  - {fileID: 1648517418}
+  - {fileID: 1951850390}
+  - {fileID: 1449435158}
+  _actionPointsBar: {fileID: 936607307}
+  _activePointsColor: {r: 0.43529415, g: 0.9607844, b: 0.9607844, a: 1}
+  _spentPointsColor: {r: 1, g: 0.8901961, b: 0.7176471, a: 1}
+--- !u!114 &1367014474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367014466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d9bea32343842ac8f80b7e8c1545213, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _game: {fileID: 728079159}
+  _gameStateSwitch: {fileID: 1367014472}
+  _loseScreen: {fileID: 1367014471}
 --- !u!1001 &1424533799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3756,6 +3858,7 @@ GameObject:
   - component: {fileID: 1578263441}
   - component: {fileID: 1578263440}
   - component: {fileID: 1578263439}
+  - component: {fileID: 1578263442}
   m_Layer: 5
   m_Name: ReflectHit
   m_TagString: Untagged
@@ -3826,19 +3929,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1578263440}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlayerCommandsExecutor, Assembly-CSharp
-        m_MethodName: AddReflectAttackCommand
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1578263440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3877,6 +3968,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578263437}
   m_CullTransparentMesh: 1
+--- !u!114 &1578263442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578263437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 995f34434fbe45d46aacf4e120446279, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button:
+    m_key: ReflectAttack
+    value: 0
 --- !u!1 &1648517416
 GameObject:
   m_ObjectHideFlags: 0
@@ -4085,8 +4191,6 @@ GameObject:
   - component: {fileID: 1724344194}
   - component: {fileID: 1724344196}
   - component: {fileID: 1724344195}
-  - component: {fileID: 1724344197}
-  - component: {fileID: 1724344198}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -4155,42 +4259,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1724344193}
   m_CullTransparentMesh: 1
---- !u!114 &1724344197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1724344193}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4fde34d7066db34cbdb90f7aa45d69f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _focusBackground: {fileID: 1177343714}
-  _loseScreen: {fileID: 1551721108}
---- !u!114 &1724344198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1724344193}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ce03e8b3dfa451499a133e8eca6846b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _healthBar: {fileID: 2139684169}
-  _actionPoints:
-  - {fileID: 1849563731}
-  - {fileID: 2091910053}
-  - {fileID: 1648517418}
-  - {fileID: 1951850390}
-  - {fileID: 1449435158}
-  _actionPointsBar: {fileID: 936607307}
-  _activePointsColor: {r: 0.43529415, g: 0.9607844, b: 0.9607844, a: 1}
-  _spentPointsColor: {r: 1, g: 0.8901961, b: 0.7176471, a: 1}
 --- !u!1 &1753527510
 GameObject:
   m_ObjectHideFlags: 0
@@ -4278,6 +4346,7 @@ GameObject:
   - component: {fileID: 1783181692}
   - component: {fileID: 1783181691}
   - component: {fileID: 1783181690}
+  - component: {fileID: 1783181693}
   m_Layer: 5
   m_Name: CircleHit
   m_TagString: Untagged
@@ -4348,19 +4417,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1783181691}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlayerCommandsExecutor, Assembly-CSharp
-        m_MethodName: AddCircleAttackCommand
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1783181691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4399,6 +4456,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1783181688}
   m_CullTransparentMesh: 1
+--- !u!114 &1783181693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1783181688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 995f34434fbe45d46aacf4e120446279, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button:
+    m_key: CircleAttack
+    value: 0
 --- !u!1 &1835337529
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,16 +1,17 @@
 using Factories;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [SelectionBase]
 public class Pillar : MonoBehaviour
 {
-    [SerializeField] private Transform model;
+    [SerializeField] private Transform _model;
     public ObstaclesFactory OriginFactory { get; set; }
 
     public void Initialise(Vector3 scale, Quaternion rotation)
     {
-        model.localScale = scale;
-        model.rotation = rotation;
+        _model.localScale = scale;
+        _model.rotation = rotation;
     }
     
     public void Recycle()

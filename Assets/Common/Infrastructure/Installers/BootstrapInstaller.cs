@@ -6,7 +6,6 @@ namespace Common.Infrastructure.Installers
 {
     public class BootstrapInstaller:MonoInstaller
     {
-        [SerializeField]private GameInput _gameInputPrefab;
         public override void InstallBindings()
         {
             BindGameInputService();
@@ -14,11 +13,7 @@ namespace Common.Infrastructure.Installers
 
         private void BindGameInputService()
         {
-            Container
-                .Bind<IGameInput>()
-                .To<GameInput>()
-                .FromComponentInNewPrefab(_gameInputPrefab)
-                .AsSingle();
+            Container.BindInterfacesTo<GameInput>().AsSingle();
         }
     }
 }

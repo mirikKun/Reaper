@@ -9,14 +9,14 @@ namespace Common.Infrastructure.Installers
     public class LocationInstaller : MonoInstaller
     {
         [SerializeField] private Transform _startPoint;
-        [SerializeField] private Transform _heroPrefab;
+        [SerializeField] private Player _heroPrefab;
         [SerializeField] private PlayerMarkers _playerMarkers;
         [SerializeField] private UIPlayerStateDisplay _playerStateDisplay;
 
         public override void InstallBindings()
         {
-            RegisterUI();
             BindPlayerMarkers();
+            RegisterUI();
             BindHero();
         }
 
@@ -42,13 +42,14 @@ namespace Common.Infrastructure.Installers
                 Container.InstantiatePrefabForComponent<Player>(_heroPrefab, _startPoint.position, Quaternion.identity,
                     null);
             Container
-                .Bind<Player>()
-                .FromInstance(player)
-                .AsSingle();           
-            Container
                 .Bind<PlayerCommandsExecutor>()
                 .FromInstance(player.GetComponent<PlayerCommandsExecutor>())
                 .AsSingle();
+            Container
+                .Bind<Player>()
+                .FromInstance(player)
+                .AsSingle();           
+         
         
         }
     }

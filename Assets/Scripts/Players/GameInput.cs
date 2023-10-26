@@ -1,14 +1,13 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Players
 {
-    public class GameInput : MonoBehaviour, IGameInput
+    public class GameInput : ITickable, IGameInput
     {
-        [SerializeField] private Button _circleAttackButton;
-        [SerializeField] private Button _reflectAttackButton;
-        [SerializeField] private Button _reverseAttackButton;
+
 
         public event Action<Vector3> OnAreaClick;
         public event Action OnExecutionClick;
@@ -16,35 +15,75 @@ namespace Players
         public event Action OnReflectAttackClick;
         public event Action OnReverseAttackClick;
 
-        private Camera camera;
+        private Camera _camera;
 
-        private Ray _touchRay => camera.ScreenPointToRay(Input.mousePosition);
+        private const string Execute = "Execute";
+        private const string CircleAttack = "CircleAttack";
+        private const string ReflectAttack = "ReflectAttack";
+        private const string ReverseAttack = "ReverseAttack";
 
-        private void Start()
+        private Ray TouchRay => _camera.ScreenPointToRay(Input.mousePosition);
+
+   
+
+        public void HandleExecutionButtonUp()
         {
-            camera = Camera.main;
-            _circleAttackButton.onClick.AddListener(UseCircleAttack);
-            _reflectAttackButton.onClick.AddListener(UseReflectAttack);
-            _reverseAttackButton.onClick.AddListener(UseReverseAttack);
+            if (SimpleInput.GetButtonUp(Execute))
+            {
+                OnExecutionClick?.Invoke();
+            }
+        }
+        public void HandleCircleAttackButtonUp()
+        {
+            if (SimpleInput.GetButtonUp(CircleAttack))
+            {
+                OnCircleAttackClick?.Invoke();
+            }
+        }
+        public void HandleReflectAttackButtonUp()
+        {
+            if (SimpleInput.GetButtonUp(ReflectAttack))
+            {
+                OnReflectAttackClick?.Invoke();
+            }
+        }
+        public void HandleReverseAttackButtonUp()
+        {
+            if (SimpleInput.GetButtonUp(ReverseAttack))
+            {
+                OnReverseAttackClick?.Invoke();
+            }
+        }
+        public void Tick()
+        {
+            HandleScreenClick();
+            HandleExecutionButtonUp();
+            HandleCircleAttackButtonUp();
+            HandleReflectAttackButtonUp();
+            HandleReverseAttackButtonUp();
         }
 
-        private void Update()
+        private void HandleScreenClick()
         {
+            GetCamera();
             if (Input.GetButtonDown("Fire1"))
             {
                 bool isOverUI = UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
 
-                if (Physics.Raycast(_touchRay, float.MaxValue, 1) && !isOverUI)
+                if (Physics.Raycast(TouchRay, float.MaxValue, 1) && !isOverUI)
                 {
-                    Vector3 position = GetVerticalRayPosition(_touchRay);
+                    Vector3 position = GetVerticalRayPosition(TouchRay);
                     OnAreaClick?.Invoke(position);
                     // playerCommandsExecutor.AddMoveToCommand(GetVerticalRayPosition(_touchRay));
                 }
             }
+        }
 
-            if (Input.GetButtonDown("Fire2"))
+        private void GetCamera()
+        {
+            if (_camera == null)
             {
-                OnExecutionClick?.Invoke();
+                _camera = Camera.main;
             }
         }
 
@@ -61,21 +100,6 @@ namespace Players
             }
 
             return pos;
-        }
-
-        private void UseReverseAttack()
-        {
-            OnReverseAttackClick?.Invoke();
-        }
-
-        private void UseReflectAttack()
-        {
-            OnReflectAttackClick?.Invoke();
-        }
-
-        private void UseCircleAttack()
-        {
-            OnCircleAttackClick?.Invoke();
         }
     }
 }

@@ -5029,7 +5029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8e4e0903ec5ee0438f47fb56ac628b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 2412671767945583782}
+  _model: {fileID: 2412671767945583782}
 --- !u!195 &8360180946096204932
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -5064,8 +5064,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 642177c32e99459d8a1735439234523e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHealth: 0
-  maxHealth: 1
+  _currentHealth: 0
+  _maxHealth: 1
   <IsInvincible>k__BackingField: 0
 --- !u!114 &8150366927150666938
 MonoBehaviour:
@@ -5079,8 +5079,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a7c08805bb04b89a8892f5a9b0e8bd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathParticle: {fileID: 1320377280985471284}
-  destroyAfter: 2
+  _deathParticle: {fileID: 1320377280985471284}
+  _destroyAfter: 2
 --- !u!136 &1107097349724556014
 CapsuleCollider:
   m_ObjectHideFlags: 0
