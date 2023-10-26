@@ -379,7 +379,7 @@ MonoBehaviour:
   _circleAttack: {fileID: 4490510120211622006}
   _reflectAttack: {fileID: 829446539026726629}
   _maxCommandCount: 5
-  _commandReductionSpeed: 0.3
+  _commandReductionSpeed: 2
   _lastPos: {x: 0, y: 0, z: 0}
   _startPos: {x: 0, y: 0, z: 0}
 --- !u!114 &4276930024328713936
@@ -451,6 +451,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db0a6c89cbf51d468199c8185d7e62b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _damage: 1
 --- !u!114 &5145491533903134436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,8 +464,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 642177c32e99459d8a1735439234523e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHealth: 0
-  _maxHealth: 1
+  _currentHealth: 3
+  _maxHealth: 3
   <IsInvincible>k__BackingField: 0
 --- !u!114 &4490510120211622006
 MonoBehaviour:

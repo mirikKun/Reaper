@@ -49,6 +49,34 @@ public class Game : MonoBehaviour
         _enemyBehaviorCollection.GameUpdate();
     }
 
+    public void SwitchFocusState()
+    {
+        if (_focusState)
+            ExitFocusState();
+        else
+            EnterFocusState();
+    }
+
+    public void SetStartValues()
+    {
+        _enemyFactory.SetPlayer(_player.transform);
+
+        var spawnRects = GetSpawnAreaRects();
+        _levelGenerator.LevelGeneratorSetup(spawnRects);
+        
+        _mediator.CloseLoseScreen();
+
+        ClearBehaviors();
+        SetPlayerDefaultValues();
+    }
+
+    private void EnterFocusState()
+    {
+        _focusState = true;
+        _mediator.TurnOnFocusBackground();
+        _enemyBehaviorCollection.StopNavMeshMoving();
+    }
+
     private void EnemySpawnProgress()
     {
         _progress += _rate * Time.deltaTime;
@@ -62,21 +90,6 @@ public class Game : MonoBehaviour
         }
     }
 
-    public void SwitchFocusState()
-    {
-        if (_focusState)
-            ExitFocusState();
-        else
-            EnterFocusState();
-    }
-
-    private void EnterFocusState()
-    {
-        _focusState = true;
-        _mediator.TurnOnFocusBackground();
-        _enemyBehaviorCollection.StopNavMeshMoving();
-    }
-
     private void ExitFocusState()
     {
         _focusState = false;
@@ -84,10 +97,8 @@ public class Game : MonoBehaviour
         _enemyBehaviorCollection.ContinueNavMeshMoving();
     }
 
-    public void SetStartValues()
+    private Rect[] GetSpawnAreaRects()
     {
-        _enemyFactory.SetPlayer(_player.transform);
-
         Rect[] spawnRects = new Rect[_enemySpawnPoints.Length + 1];
         spawnRects[0] = new Rect(0, 0, 5, 5);
         for (var i = 0; i < _enemySpawnPoints.Length; i++)
@@ -95,10 +106,7 @@ public class Game : MonoBehaviour
             spawnRects[i + 1] = _enemySpawnPoints[i].GetSpawnRect();
         }
 
-        _levelGenerator.LevelGeneratorSetup(spawnRects);
-
-        ClearBehaviors();
-        _mediator.CloseLoseScreen();
+        return spawnRects;
     }
 
 
@@ -114,8 +122,13 @@ public class Game : MonoBehaviour
         _player = injectedPlayer;
         _player.PlayerCommandsExecutor.OnCommandsReady += EnterFocusState;
         _player.PlayerCommandsExecutor.OnExecutionStart += ExitFocusState;
-        _player.Health.OnDeath +=_mediator.CloseLoseScreen;
+        _player.Health.OnDeath +=_mediator.OpenLoseScreen;
         
+        SetPlayerDefaultValues();
+    }
+
+    private void SetPlayerDefaultValues()
+    {
         _player.transform.position = Vector3.zero;
         _player.Initialise();
     }
