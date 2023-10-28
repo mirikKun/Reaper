@@ -1,7 +1,7 @@
-using CodeBase.Logic;
-using Common.Infrastructure.States;
+using Curtain;
+using Infrastructure.States;
 
-namespace Common.Infrastructure
+namespace Infrastructure
 {
     public class Game
     {

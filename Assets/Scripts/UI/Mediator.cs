@@ -4,7 +4,7 @@ namespace UI
 {
     public class Mediator:MonoBehaviour
     {
-        [SerializeField] private Game _game;
+        [SerializeField] private Game.Game _game;
         [SerializeField] private UIGameStateSwitch _gameStateSwitch;
         [SerializeField] private LoseScreen _loseScreen;
 

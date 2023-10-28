@@ -1,8 +1,7 @@
 using Players;
-using UnityEngine;
 using Zenject;
 
-namespace Common.Infrastructure.Installers
+namespace Infrastructure.Installers
 {
     public class BootstrapInstaller:MonoInstaller
     {

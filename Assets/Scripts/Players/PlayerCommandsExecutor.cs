@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Players;
+using Attack;
+using Commands;
 using Pools;
 using UnityEngine;
 using Zenject;
 
-namespace Commands
+namespace Players
 {
     public class PlayerCommandsExecutor : MonoBehaviour
     {

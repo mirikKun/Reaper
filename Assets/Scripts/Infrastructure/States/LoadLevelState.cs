@@ -1,6 +1,6 @@
-﻿using CodeBase.Logic;
+﻿using Curtain;
 
-namespace Common.Infrastructure.States
+namespace Infrastructure.States
 {
   public class LoadLevelState : IPayloadedState<string>
   {

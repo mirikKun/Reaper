@@ -2,7 +2,7 @@ using UI;
 using UnityEngine;
 using Zenject;
 
-namespace Common.Infrastructure.Installers
+namespace Infrastructure.Installers
 {
     public class UIInstaller : MonoInstaller
     {

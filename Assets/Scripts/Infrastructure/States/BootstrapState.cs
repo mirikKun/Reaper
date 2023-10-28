@@ -1,5 +1,5 @@
 ﻿
-namespace Common.Infrastructure.States
+namespace Infrastructure.States
 {
   public class BootstrapState : IState
   {

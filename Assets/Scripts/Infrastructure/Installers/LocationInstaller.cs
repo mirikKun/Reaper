@@ -1,10 +1,8 @@
-using Commands;
 using Players;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
-namespace Common.Infrastructure.Installers
+namespace Infrastructure.Installers
 {
     public class LocationInstaller : MonoInstaller
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Common.Infrastructure
+namespace Infrastructure
 {
     public class GameRunner:MonoBehaviour
     {
