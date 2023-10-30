@@ -1,7 +1,7 @@
 # Reaper
 My Personal pet project. Top down semi turn based gameplay.
 ##Screenshots
-[!Gameplay](https://drive.google.com/file/d/15n56rri60_5RnM0nivrQbKPVuxJN3Qhp/view?usp=sharing)
+[!Gameplay](https://drive.google.com/uc?export=view&id=15n56rri60_5RnM0nivrQbKPVuxJN3Qhp)
 ##TODO
 1. Add good icons
 2. Add animations
