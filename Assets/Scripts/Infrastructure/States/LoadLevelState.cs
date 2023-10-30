@@ -37,14 +37,5 @@ namespace Infrastructure.States
     {
      
     }
-
-    // private void InitGameWorld()
-    // {
-    //
-    //   CameraFollow(hero);
-    // }
-    //
-    // private void CameraFollow(GameObject hero) =>
-    //   Camera.main.GetComponent<CameraFollow>().Follow(hero);
   }
 }

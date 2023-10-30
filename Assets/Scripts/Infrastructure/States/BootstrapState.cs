@@ -27,9 +27,5 @@ namespace Infrastructure.States
     private void EnterLoadLevel() =>
       _stateMachine.Enter<LoadProgressState>();
 
-    // private static IInputService InputService()
-    // {
-    //   return new StandaloneInputService();
-    // }
   }
 }

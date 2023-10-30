@@ -379,7 +379,7 @@ MonoBehaviour:
   _circleAttack: {fileID: 4490510120211622006}
   _reflectAttack: {fileID: 829446539026726629}
   _maxCommandCount: 5
-  _commandReductionSpeed: 2
+  _commandReductionSpeed: 3
   _lastPos: {x: 0, y: 0, z: 0}
   _startPos: {x: 0, y: 0, z: 0}
 --- !u!114 &4276930024328713936
@@ -501,7 +501,7 @@ MonoBehaviour:
   _maxWaitingTime: 3
   _attackSpeed: 5
   _postAttackTime: 0.3
-  _attackEffect: {fileID: 8988097698939308059}
+  _attackEffect: {fileID: 671045167329562983}
   _checkRadius: 2
   _damage: 1
   _attackRadius: 3
@@ -530,14 +530,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6016150898779647076}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.025915232, z: 0, w: 0.9996642}
-  m_LocalPosition: {x: 0.07, y: 1, z: -4.64}
-  m_LocalScale: {x: 3, y: 3, z: 5}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6496264136482348826}
   m_Father: {fileID: 8988097698939308059}
-  m_LocalEulerAnglesHint: {x: 0, y: -2.97, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6507076490710890781
 GameObject:
   m_ObjectHideFlags: 0
