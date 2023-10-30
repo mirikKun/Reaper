@@ -4,7 +4,8 @@ My Personal pet project. Top down semi turn based gameplay.
 
 ##Screenshots
 
-![Gameplay](https://drive.google.com/uc?id=15n56rri60_5RnM0nivrQbKPVuxJN3Qhp)
+
+![Gameplay](https://github.com/mirikKun/Reaper/assets/55330163/ec7d087e-0b49-460c-9ae5-38d5a66ac498)
 
 ##TODO
 1. Add good icons
