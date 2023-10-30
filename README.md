@@ -4,7 +4,7 @@ My Personal pet project. Top down semi turn based gameplay.
 
 ##Screenshots
 
-![Gameplay](https://drive.google.com/uc?export=view&id=15n56rri60_5RnM0nivrQbKPVuxJN3Qhp)
+![Gameplay](https://drive.google.com/uc?id=15n56rri60_5RnM0nivrQbKPVuxJN3Qhp)
 
 ##TODO
 1. Add good icons
